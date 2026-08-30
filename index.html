@@ -100,10 +100,19 @@
   .lnav .bars i{flex:1;height:7px;border-radius:3px;background:rgba(255,255,255,.16)}
   .lnav .bars i.done{background:var(--chrome-dim)}
   .lnav .bars i.on{background:var(--chrome-hi);box-shadow:0 0 0 2px rgba(242,193,78,.25)}
-  .lnav button{appearance:none;margin-top:.6rem;background:var(--chrome-hi);color:var(--chrome);
-    border:none;border-radius:7px;font-family:var(--f-d);font-weight:700;font-size:.95rem;
-    letter-spacing:.04em;text-transform:uppercase;padding:.5rem .9rem;cursor:pointer}
-  .lnav.off{border-left:5px solid var(--chrome-hi)}
+  .lnav .picks{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;margin-top:.65rem}
+  .pk{appearance:none;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);
+    color:var(--chrome-ink);border-radius:8px;padding:.5rem .25rem;cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;gap:.12rem;line-height:1;
+    -webkit-tap-highlight-color:transparent}
+  .pk b{font-family:var(--f-d);font-size:1.3rem;font-weight:700}
+  .pk span{font-family:var(--f-d);font-size:.72rem;letter-spacing:.05em;
+    text-transform:uppercase;color:var(--chrome-dim)}
+  .pk.on{background:var(--chrome-hi);border-color:var(--chrome-hi);color:var(--chrome)}
+  .pk.on span{color:var(--chrome)}
+  .lnav .foot{margin-top:.6rem;font-size:.82rem;color:var(--chrome-dim);line-height:1.45}
+  .lnk{appearance:none;background:none;border:none;padding:0;color:var(--chrome-hi);
+    font:inherit;text-decoration:underline;cursor:pointer}
   .eta-grid{display:flex;gap:.6rem}
   .eta-cell{flex:1;background:rgba(255,255,255,.06);border-radius:8px;padding:.55rem .5rem;text-align:center}
   .eta-cell .n{font-family:var(--f-m);font-weight:600;font-size:1.4rem;color:var(--chrome-ink);font-variant-numeric:tabular-nums}
@@ -243,6 +252,7 @@
 <main>
 
 <section class="panel" id="p-drive" role="tabpanel">
+  <div id="legnav"></div>
   <div id="eta"></div>
 
   <div class="grp">
@@ -253,7 +263,6 @@
 
   <div class="grp">
     <h2>The Route</h2>
-    <div id="legnav"></div>
     <p class="lede">You already know the first hour &mdash; it&rsquo;s how you came in, just turned the other way.</p>
 
     <div class="leg">
@@ -687,7 +696,7 @@
   document.getElementById('tdn').addEventListener('click',function(){ if(si>0){si--;applySize()} });
 
 
-  /* ---------- live position ---------- */
+  /* ---------- where are we ---------- */
   var ROUTE=[
     {n:'Ford City',la:40.772,lo:-79.532},
     {n:'Kittanning',la:40.816,lo:-79.522},
@@ -710,217 +719,185 @@
     {n:'Fermilab',la:41.800,lo:-88.215},
     {n:'Aurora',la:41.790,lo:-88.245}
   ];
-  var STOPC=[
-    {la:41.310,lo:-81.833},{la:41.420,lo:-82.680},{la:41.552,lo:-83.630},
-    {la:41.660,lo:-86.170},{la:41.570,lo:-87.180},{la:41.850,lo:-88.310}
-  ];
   var DEST={la:41.790,lo:-88.245};
-  var VRBO_EXTRA=15;            // minutes from the house on to the Geneva VRBO
-  // road miles still to drive at each waypoint (turnpike mileposts, not straight lines)
+  var VRBO_EXTRA=15;                 // minutes on from the house to the Geneva VRBO
+  // road miles still to drive at each waypoint, from turnpike mileposts
   var REM=[553,548,507,488,468,427,419,395,372,303,266,249,186,120,100,59,49,13,7,0];
-  var TOTAL=575;
+  var TOTAL=575, PLAN_MPH=63, STOPHRS=1.0;
+  var LEGSTART=[0,68,148,389,525,568];
+  var LEGNAMES=['PA-28 north to I-80','I-80 west across Pennsylvania',
+    'Ohio Turnpike, end to end','Indiana Toll Road','Around Chicago to I-88','Packford Lane'];
+  var LEGSHORT=['PA-28','I-80 PA','Ohio','Indiana','Chicago','There'];
 
   function miles(a,b,c,d){
     var R=3958.8,t=Math.PI/180;
-    var dφ=(c-a)*t, dλ=(d-b)*t;
-    var x=Math.sin(dφ/2)*Math.sin(dφ/2)+Math.cos(a*t)*Math.cos(c*t)*Math.sin(dλ/2)*Math.sin(dλ/2);
+    var dp=(c-a)*t, dl=(d-b)*t;
+    var x=Math.sin(dp/2)*Math.sin(dp/2)+Math.cos(a*t)*Math.cos(c*t)*Math.sin(dl/2)*Math.sin(dl/2);
     return 2*R*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
   }
-
-  var prog=-1, lastHere=-1, watchId=null;
-  try{var sp=parseInt(localStorage.getItem('auroraProg'),10); if(!isNaN(sp)) prog=sp;}catch(e){}
-
-  var miles$=document.getElementById('gps');
-  function gpsCard(state,big,sub,btn){
-    miles$.innerHTML='<div class="gps"><div class="st">'+state+'</div>'+
-      '<div class="big">'+big+'</div><div class="sub">'+sub+'</div>'+
-      (btn?'<button id="gpsgo">'+btn+'</button>':'')+'</div>';
-    var g=document.getElementById('gpsgo');
-    if(g) g.addEventListener('click',startGPS);
-  }
-
-  // which of the six legs each route waypoint belongs to
-  var LEGOF=[0,0, 1,1,1, 2,2,2,2,2,2,2, 3,3,3,3,3, 4,4, 5];
-
-  var LEGNAMES=['PA-28 north to I-80','I-80 west across Pennsylvania',
-    'Ohio Turnpike, end to end','Indiana Toll Road','I-80, I-355, I-88','Packford Lane'];
-
-  function legnav(cur){
-    var el=document.getElementById('legnav');
-    if(!el) return;
-    if(cur<0){
-      el.innerHTML='<div class="lnav off"><div class="k">Location off</div>'+
-        '<div class="big">The route can&rsquo;t tell you where you are yet</div>'+
-        '<div class="sub">Turn it on and this marks the leg you&rsquo;re in.</div>'+
-        '<button id="lgo">Turn on location</button></div>';
-      var g=document.getElementById('lgo');
-      if(g) g.addEventListener('click',startGPS);
-      return;
-    }
-    var bars='';
-    for(var i=0;i<LEGNAMES.length;i++)
-      bars+='<i class="'+(i<cur?'done':(i===cur?'on':''))+'"></i>';
-    var left=(typeof milesLeft==='function')?milesLeft():null;
-    el.innerHTML='<div class="lnav"><div class="k">You are on leg '+(cur+1)+' of 6</div>'+
-      '<div class="big">'+LEGNAMES[cur]+'</div>'+
-      (left!==null?'<div class="sub">'+left+' miles left &middot; '+(6-cur-1)+' legs after this one</div>':'')+
-      '<div class="bars">'+bars+'</div></div>';
-  }
-
-  function markLegs(){
-    var legs=document.querySelectorAll('#p-drive .leg');
-    if(!legs.length) return;
-    var cur = prog>=0 ? LEGOF[Math.min(prog,LEGOF.length-1)] : -1;
-    legnav(cur);
-    legs.forEach(function(el,i){
-      el.classList.toggle('done', cur>=0 && i<cur);
-      el.classList.toggle('here', i===cur);
-      var num=el.querySelector('.num'), h=el.querySelector('h3');
-      if(num){
-        var car=num.querySelector('.car');
-        if(i===cur && !car) num.insertAdjacentHTML('afterbegin','<span class="car" aria-hidden="true">&rsaquo;</span>');
-        if(i!==cur && car) car.remove();
-      }
-      var tag=el.querySelector('.legnow');
-      if(i===cur && !tag && h) h.insertAdjacentHTML('beforeend','<span class="legnow">You&rsquo;re here</span>');
-      if(i!==cur && tag) tag.remove();
-    });
-  }
-
-  function mark(){
-    markLegs();
-    var miles_=document.querySelectorAll('#p-passing .mile');
-    miles_.forEach(function(el,i){
-      el.classList.toggle('passed', i<prog);
-      el.classList.toggle('here', i===prog);
-      var h=el.querySelector('h3'), tag=el.querySelector('.nowtag');
-      if(i===prog && !tag && h){ h.insertAdjacentHTML('beforeend','<span class="nowtag">Here</span>'); }
-      if(i!==prog && tag) tag.remove();
-    });
-    document.querySelectorAll('#p-stops .stop').forEach(function(el,i){
-      if(i<STOPC.length && window.__pos){
-        el.classList.toggle('passed', miles(window.__pos.la,window.__pos.lo,STOPC[i].la,STOPC[i].lo) > 25 &&
-          STOPC[i].lo > window.__pos.lo);
-      }
-    });
-    if(prog!==lastHere && prog>=0){
-      lastHere=prog;
-      var cur=document.querySelectorAll('#p-passing .mile')[prog];
-      if(cur && !document.getElementById('p-passing').hidden){
-        setTimeout(function(){cur.scrollIntoView({behavior:'smooth',block:'center'})},250);
-      }
-    }
-  }
-
-  function onPos(pos){
-    var la=pos.coords.latitude, lo=pos.coords.longitude;
-    window.__pos={la:la,lo:lo};
-    var best=0,bd=1e9;
-    ROUTE.forEach(function(r,i){ var d=miles(la,lo,r.la,r.lo); if(d<bd){bd=d;best=i;} });
-    if(best>prog){ prog=best; try{localStorage.setItem('auroraProg',prog)}catch(e){} }
-    var togo=Math.round(miles(la,lo,DEST.la,DEST.lo));
-    var near=ROUTE[prog]||ROUTE[0];
-    gpsCard('Following along',
-      togo<3?'You&rsquo;re there':'Near '+near.n,
-      togo<3?'Aurora':(togo+' miles to Aurora &middot; '+(prog+1)+' of '+ROUTE.length+' passed'));
-    mark();
-    if(window.paintETA) window.paintETA();
-  }
-
-  function onErr(e){
-    gpsCard('Location off',
-      e && e.code===1 ? 'Permission denied' : 'Can&rsquo;t get a fix',
-      e && e.code===1
-        ? 'Allow location for this page and it will follow the drive and grey out what you&rsquo;ve passed.'
-        : 'No signal yet. Everything below still works by hand.',
-      'Try again');
-  }
-
-  function startGPS(){
-    if(!navigator.geolocation){
-      gpsCard('Not available','No location on this browser','Scroll through by hand instead.');
-      return;
-    }
-    gpsCard('Locating','Finding you&hellip;','This can take a few seconds in a moving car.');
-    if(watchId!==null) navigator.geolocation.clearWatch(watchId);
-    watchId=navigator.geolocation.watchPosition(onPos,onErr,
-      {enableHighAccuracy:true,maximumAge:15000,timeout:20000});
-  }
-
-  gpsCard('Follow the drive','Use my location',
-    'Greys out what you&rsquo;ve passed and jumps to whatever is out the window now.','Turn it on');
-  markLegs();
-  if(prog>=0) mark();
-  startGPS();
-
-  // ETA card, recomputed from where you actually are
-  var PLAN_MPH=63, STOPS=1.0;
-  function pad(n){return String(n).padStart(2,'0')}
+  function wpMile(i){ return TOTAL-REM[i]; }
+  function pad(n){ return String(n).padStart(2,'0'); }
   function hhmm(d){ return d.toLocaleTimeString('en-US',
     {timeZone:'America/Chicago',hour:'numeric',minute:'2-digit'}); }
   function hm(h){ var t=Math.max(0,Math.round(h*60)); return Math.floor(t/60)+':'+pad(t%60); }
 
-  // miles left, interpolated inside the segment you're actually in
-  function milesLeft(){
-    if(!window.__pos || prog<0) return null;
-    var i=Math.min(prog,ROUTE.length-1);
-    if(i>=ROUTE.length-1) return Math.round(miles(window.__pos.la,window.__pos.lo,DEST.la,DEST.lo));
-    var segStraight=miles(ROUTE[i].la,ROUTE[i].lo,ROUTE[i+1].la,ROUTE[i+1].lo);
-    var toNext=miles(window.__pos.la,window.__pos.lo,ROUTE[i+1].la,ROUTE[i+1].lo);
-    var frac=segStraight>0?Math.min(1,toNext/segStraight):0;
-    return Math.round(REM[i+1]+(REM[i]-REM[i+1])*frac);
-  }
+  /* One number runs the whole app: how far along we are.
+     Set it by tapping a leg, or let GPS set it if you want GPS. Then it
+     keeps moving on the clock, so it stays right without touching anything. */
+  var anchor=null, gpsOn=false, gpsWatch=null;
+  try{ anchor=JSON.parse(localStorage.getItem('auroraAnchor')||'null'); }catch(e){}
+  if(anchor && (typeof anchor.mile!=='number' || typeof anchor.t!=='number')) anchor=null;
 
-  // observed pace, so a long lunch or heavy traffic pushes the arrival out
-  var trip=null;
-  try{ trip=JSON.parse(localStorage.getItem('auroraTrip')||'null'); }catch(e){}
-  function pace(left){
-    var now=Date.now();
-    if(!trip || trip.rem<left-15){ trip={t:now,rem:left}; save(); return null; }
-    var hrs=(now-trip.t)/3600000, gone=trip.rem-left;
-    if(hrs<0.33||gone<15) return null;
-    return Math.min(80,Math.max(35,gone/hrs));
+  function setAnchor(mile,src){
+    anchor={mile:Math.max(0,Math.min(TOTAL,mile)),t:Date.now(),src:src};
+    try{ localStorage.setItem('auroraAnchor',JSON.stringify(anchor)); }catch(e){}
+    render();
   }
-  function save(){ try{localStorage.setItem('auroraTrip',JSON.stringify(trip))}catch(e){} }
+  function curMile(){
+    if(!anchor) return null;
+    return Math.min(TOTAL, anchor.mile + (Date.now()-anchor.t)/3600000*PLAN_MPH);
+  }
+  function progOf(m){ var b=0; for(var i=0;i<ROUTE.length;i++) if(wpMile(i)<=m) b=i; return b; }
+  function legOf(m){ var l=0; for(var i=0;i<LEGSTART.length;i++) if(m>=LEGSTART[i]) l=i; return l; }
 
-  function paint(){
-    var now=new Date();
-    var left=milesLeft(), live=left!==null, mph=null, hrs;
-    if(live){
-      mph=pace(left);
-      hrs = mph ? left/mph : left/PLAN_MPH + STOPS*(left/TOTAL);
-    } else {
-      left=TOTAL; hrs=TOTAL/PLAN_MPH+STOPS;
+  /* ---------- optional GPS: never asked for, never required ---------- */
+  function gpsFix(pos){
+    gpsOn=true;
+    try{ localStorage.setItem('auroraGPS','1'); }catch(e){}
+    var la=pos.coords.latitude, lo=pos.coords.longitude;
+    var best=0,bd=1e9;
+    ROUTE.forEach(function(r,i){ var d=miles(la,lo,r.la,r.lo); if(d<bd){bd=d;best=i;} });
+    var left;
+    if(best>=ROUTE.length-1){ left=miles(la,lo,DEST.la,DEST.lo); }
+    else{
+      var seg=miles(ROUTE[best].la,ROUTE[best].lo,ROUTE[best+1].la,ROUTE[best+1].lo);
+      var toNext=miles(la,lo,ROUTE[best+1].la,ROUTE[best+1].lo);
+      var frac=seg>0?Math.min(1,toNext/seg):0;
+      left=REM[best+1]+(REM[best]-REM[best+1])*frac;
     }
-    var ct=new Date(now.getTime()+hrs*3600*1000);
-    var vr=new Date(ct.getTime()+VRBO_EXTRA*60000);
+    setAnchor(TOTAL-left,'gps');
+  }
+  function gpsFail(){ gpsOn=false; render(); }
+  function startGPS(){
+    if(!navigator.geolocation){ gpsFail(); return; }
+    if(gpsWatch!==null) navigator.geolocation.clearWatch(gpsWatch);
+    gpsWatch=navigator.geolocation.watchPosition(gpsFix,gpsFail,
+      {enableHighAccuracy:true,maximumAge:15000,timeout:20000});
+  }
+
+  /* ---------- the one control, on both tabs ---------- */
+  function controlHTML(){
+    var m=curMile(), set=m!==null;
+    var leg=set?legOf(m):-1, left=set?Math.round(TOTAL-m):null;
+    var picks='';
+    for(var i=0;i<6;i++)
+      picks+='<button class="pk'+(i===leg?' on':'')+'" data-leg="'+i+'">'+
+        '<b>'+(i+1)+'</b><span>'+LEGSHORT[i]+'</span></button>';
+    var bars='';
+    for(var j=0;j<6;j++) bars+='<i class="'+(j<leg?'done':(j===leg?'on':''))+'"></i>';
+    var hrs=set?(left/PLAN_MPH+STOPHRS*(left/TOTAL)):null;
+    return '<div class="lnav">'+
+      '<div class="k">'+(set?'Leg '+(leg+1)+' of 6':'Where are you?')+'</div>'+
+      '<div class="big">'+(set?LEGNAMES[leg]:'Tap the leg you&rsquo;re on')+'</div>'+
+      (set?'<div class="sub">'+left+' miles left &middot; house by '+
+        hhmm(new Date(Date.now()+hrs*3600*1000))+' CT</div>':
+        '<div class="sub">One tap and the whole app follows the drive.</div>')+
+      '<div class="picks">'+picks+'</div>'+
+      (set?'<div class="bars">'+bars+'</div>':'')+
+      '<div class="foot">'+
+        (gpsOn?'Following your GPS.'
+             :(set?'Moving on the clock. Tap again whenever it drifts.'
+                  :'No permissions, no sign-in. Just tap.'))+
+        (gpsOn?'':' <button class="lnk" id="usegps">Use GPS too</button>')+
+      '</div></div>';
+  }
+
+  function wireControl(root){
+    root.querySelectorAll('.pk').forEach(function(b){
+      b.addEventListener('click',function(){ setAnchor(LEGSTART[+b.dataset.leg],'tap'); });
+    });
+    var g=root.querySelector('#usegps');
+    if(g) g.addEventListener('click',startGPS);
+  }
+
+  /* ---------- paint everything from that one number ---------- */
+  function render(){
+    var m=curMile(), set=m!==null;
+    var leg=set?legOf(m):-1, prog=set?progOf(m):-1;
+    var left=set?Math.round(TOTAL-m):TOTAL;
+    var hrs=left/PLAN_MPH+STOPHRS*(left/TOTAL);
+
+    ['legnav','gps'].forEach(function(id){
+      var el=document.getElementById(id);
+      if(!el) return;
+      el.innerHTML=controlHTML();
+      wireControl(el);
+    });
+
+    document.querySelectorAll('#p-drive .leg').forEach(function(el,i){
+      el.classList.toggle('done', leg>=0 && i<leg);
+      el.classList.toggle('here', i===leg);
+      var num=el.querySelector('.num'), h=el.querySelector('h3');
+      if(num){
+        var car=num.querySelector('.car');
+        if(i===leg && !car) num.insertAdjacentHTML('afterbegin','<span class="car" aria-hidden="true">&rsaquo;</span>');
+        if(i!==leg && car) car.remove();
+      }
+      var tag=el.querySelector('.legnow');
+      if(i===leg && !tag && h) h.insertAdjacentHTML('beforeend','<span class="legnow">You&rsquo;re here</span>');
+      if(i!==leg && tag) tag.remove();
+    });
+
+    var mile$=document.querySelectorAll('#p-passing .mile');
+    mile$.forEach(function(el,i){
+      el.classList.toggle('passed', prog>=0 && i<prog);
+      el.classList.toggle('here', i===prog);
+      var h=el.querySelector('h3'), tag=el.querySelector('.nowtag');
+      if(i===prog && !tag && h) h.insertAdjacentHTML('beforeend','<span class="nowtag">Here</span>');
+      if(i!==prog && tag) tag.remove();
+    });
+
+    document.querySelectorAll('#p-stops .stop').forEach(function(el,i){
+      el.classList.toggle('passed', set && stopMile(i) < m-5);
+    });
+
     var hdr=document.getElementById('hdr');
-    if(hdr) hdr.innerHTML = live ? left+' MI LEFT &middot; '+hm(hrs) : '~575 MI &middot; ~9H10';
-    document.getElementById('eta').innerHTML =
-      '<div class="eta">'+
-        '<div class="k">'+(live?'Live &middot; from where you are now':'If you left right now')+'</div>'+
+    if(hdr) hdr.innerHTML = set ? left+' MI LEFT &middot; '+hm(hrs) : '~575 MI &middot; ~9H10';
+
+    var ct=new Date(Date.now()+hrs*3600*1000);
+    var vr=new Date(ct.getTime()+VRBO_EXTRA*60000);
+    var eta=document.getElementById('eta');
+    if(eta){
+      eta.innerHTML='<div class="eta">'+
+        '<div class="k">'+(set?(gpsOn?'Live &middot; GPS':'Live &middot; from leg '+(leg+1)):'If you left right now')+'</div>'+
         '<h2>The house by '+hhmm(ct)+' CT</h2>'+
         '<p class="eta-sub">VRBO in Geneva about '+hhmm(vr)+'</p>'+
         '<div class="eta-grid">'+
           '<div class="eta-cell"><div class="n">'+left+'</div><div class="l">miles left</div></div>'+
           '<div class="eta-cell"><div class="n">'+hm(hrs)+'</div><div class="l">to go</div></div>'+
-          '<div class="eta-cell"><div class="n">'+(mph?Math.round(mph):PLAN_MPH)+'</div><div class="l">'+(mph?'your mph':'assumed mph')+'</div></div>'+
+          '<div class="eta-cell"><div class="n">'+PLAN_MPH+'</div><div class="l">mph</div></div>'+
         '</div>'+
         '<div class="go-row">'+
           '<a href="https://maps.apple.com/?daddr=2806+Packford+Lane,+Aurora,+IL+60502&dirflg=d" target="_blank">The house &rarr;</a>'+
           '<a href="https://maps.apple.com/?daddr=598+Westfield+Crse,+Geneva,+IL+60134&dirflg=d" target="_blank">The VRBO &rarr;</a>'+
           '<a class="ghost" href="#passing" data-jump="passing">Passing &rarr;</a>'+
         '</div>'+
-        '<p class="eta-note">'+(mph
-          ? 'Your actual pace so far, stops and all. It moves as you do.'
-          : (live ? 'Assumes '+PLAN_MPH+' mph and a share of the hour of stops. Switches to your real pace after twenty minutes of driving.'
-                  : 'Turn on location and this becomes a live countdown. Traffic is Apple&rsquo;s job, not this page&rsquo;s.'))+'</p>'+
+        '<p class="eta-note">'+(set
+          ? 'Counts down on its own. If it drifts, tap the leg you&rsquo;re actually on.'
+          : 'Tap your leg above and this becomes a live countdown.')+'</p>'+
       '</div>';
-    var j=document.querySelector('[data-jump]');
-    if(j) j.addEventListener('click',function(e){e.preventDefault();show(j.dataset.jump,true)});
+      var j=eta.querySelector('[data-jump]');
+      if(j) j.addEventListener('click',function(e){e.preventDefault();show(j.dataset.jump,true)});
+    }
   }
-  window.paintETA=paint;
-  paint(); setInterval(paint,30000);
+
+  // rough mile marker for each Culver's, for greying out the ones behind us
+  var STOPMILE=[203,272,326,475,516,568];
+  function stopMile(i){ return STOPMILE[i]!==undefined?STOPMILE[i]:1e9; }
+
+  render();
+  setInterval(render,30000);
+  try{ if(localStorage.getItem('auroraGPS')==='1') startGPS(); }catch(e){}
 })();
 </script>
 
