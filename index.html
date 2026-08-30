@@ -31,7 +31,7 @@
     --f-m:'IBM Plex Mono',ui-monospace,Menlo,monospace;
   }
   @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-    --ground:#111316; --surface:#191C20; --surface-alt:#222free; --surface-alt:#22262B;
+    --ground:#111316; --surface:#191C20; --surface-alt:#22262B;
     --ink:#ECEFF2; --muted:#98A0A8; --faint:#697078; --rule:#2C3138;
     --road:#7FB2DB; --road-2:#A8CDEA; --sign:#5FBF83; --clay:#D4783F; --clay-bg:#2C1F16;
     --shadow:0 1px 2px rgba(0,0,0,.3),0 2px 8px rgba(0,0,0,.25);
@@ -110,6 +110,19 @@
   .leg p:last-child{margin-bottom:0}
   .leg a.go{display:inline-block;margin-top:.3rem;font-family:var(--f-m);font-size:.82rem;
     color:var(--road);text-decoration:none;font-weight:600}
+
+  .leg{transition:opacity .25s}
+  .leg.done{opacity:.4}
+  .leg.here{border-color:var(--chrome-hi);border-left:5px solid var(--chrome-hi);
+    padding-left:.55rem;box-shadow:0 0 0 3px rgba(242,193,78,.16),var(--shadow)}
+  .leg.here .num{color:var(--chrome-hi)}
+  .leg .num .car{display:block;font-size:1.45rem;line-height:.8;color:var(--chrome-hi);
+    margin:-.15rem 0 .05rem;animation:carp 1.9s ease-in-out infinite}
+  @keyframes carp{0%,100%{transform:translateX(0);opacity:1}50%{transform:translateX(3px);opacity:.55}}
+  @media (prefers-reduced-motion:reduce){ .leg .num .car{animation:none} }
+  .legnow{font-family:var(--f-d);font-size:.78rem;font-weight:700;letter-spacing:.08em;
+    text-transform:uppercase;background:var(--chrome-hi);color:var(--chrome);
+    padding:.08rem .4rem;border-radius:4px;margin-left:.4rem;vertical-align:2px;display:inline-block}
 
   .stop{background:var(--surface);border:1px solid var(--rule);border-left:4px solid var(--sign);
     border-radius:9px;padding:.8rem .95rem;box-shadow:var(--shadow)}
@@ -306,7 +319,16 @@
     <h2>Pennsylvania</h2>
 
     <div class="mile">
-      <span class="when">0:15</span>
+      <span class="when">0:20</span>
+      <div class="what">
+        <h3>Ford City &mdash; the town that made plate glass</h3>
+        <div class="where">Along the river</div>
+        <p>Named for John B. Ford, who built the plate-glass works here. The company he helped start became <strong>PPG</strong>. For a long stretch, a serious share of America&rsquo;s window glass came out of this valley.</p>
+      </div>
+    </div>
+
+    <div class="mile">
+      <span class="when">0:30</span>
       <div class="what">
         <h3>Kittanning and the Allegheny</h3>
         <div class="where">PA-28 north &middot; out the left window</div>
@@ -315,25 +337,16 @@
     </div>
 
     <div class="mile">
-      <span class="when">0:25</span>
-      <div class="what">
-        <h3>Ford City &mdash; the town that made plate glass</h3>
-        <div class="where">Along the river</div>
-        <p>Named for John B. Ford, who built the plate-glass works here. The company he helped start became <strong>PPG</strong>. For a long stretch, a serious share of America&rsquo;s window glass came out of this valley.</p>
-      </div>
-    </div>
-
-    <div class="mile big">
       <span class="when">1:10</span>
       <div class="what">
-        <h3>The Emlenton bridge</h3>
-        <div class="where">I-80 west &middot; you drive over it</div>
-        <p>I-80 crosses the Allegheny here on one of the highest bridges on the whole interstate &mdash; the town of Emlenton sits in the gorge <em>underneath</em> you. Blink and it&rsquo;s over, but look down and you&rsquo;ll see rooftops.</p>
+        <h3>Punxsutawney, off to the south</h3>
+        <div class="where">Behind you now</div>
+        <p>Phil&rsquo;s town, about 25 miles south of the highway. You passed the same junction coming in on Thursday.</p>
       </div>
     </div>
 
     <div class="mile">
-      <span class="when">1:20</span>
+      <span class="when">1:25</span>
       <div class="what">
         <h3>Where the oil industry started</h3>
         <div class="where">40 miles north &middot; Titusville</div>
@@ -341,12 +354,12 @@
       </div>
     </div>
 
-    <div class="mile">
-      <span class="when">1:30</span>
+    <div class="mile big">
+      <span class="when">1:40</span>
       <div class="what">
-        <h3>Punxsutawney, off to the south</h3>
-        <div class="where">Behind you now</div>
-        <p>Phil&rsquo;s town, about 25 miles south of the highway. You passed the same junction coming in on Thursday.</p>
+        <h3>The Emlenton bridge</h3>
+        <div class="where">I-80 west &middot; you drive over it</div>
+        <p>I-80 crosses the Allegheny here on one of the highest bridges on the whole interstate &mdash; the town of Emlenton sits in the gorge <em>underneath</em> you. Blink and it&rsquo;s over, but look down and you&rsquo;ll see rooftops.</p>
       </div>
     </div>
 
@@ -659,11 +672,11 @@
 
   /* ---------- live position ---------- */
   var ROUTE=[
-    {n:'Kittanning',la:40.816,lo:-79.522},
     {n:'Ford City',la:40.772,lo:-79.532},
-    {n:'the Emlenton bridge',la:41.183,lo:-79.712},
-    {n:'the old oil country',la:41.195,lo:-79.385},
+    {n:'Kittanning',la:40.816,lo:-79.522},
     {n:'the Punxsutawney turnoff',la:41.161,lo:-79.083},
+    {n:'the old oil country',la:41.195,lo:-79.385},
+    {n:'the Emlenton bridge',la:41.183,lo:-79.712},
     {n:'the Ohio line',la:41.222,lo:-80.519},
     {n:'Youngstown',la:41.095,lo:-80.647},
     {n:'Warren',la:41.237,lo:-80.818},
@@ -677,7 +690,7 @@
     {n:'the Indiana Dunes',la:41.632,lo:-87.055},
     {n:'Gary',la:41.601,lo:-87.340},
     {n:'I-88',la:41.770,lo:-88.150},
-    {n:'Fermilab',la:41.841,lo:-88.263},
+    {n:'Fermilab',la:41.800,lo:-88.215},
     {n:'Aurora',la:41.790,lo:-88.245}
   ];
   var STOPC=[
@@ -705,7 +718,30 @@
     if(g) g.addEventListener('click',startGPS);
   }
 
+  // which of the six legs each route waypoint belongs to
+  var LEGOF=[0,0, 1,1,1, 2,2,2,2,2,2,2, 3,3,3,3,3, 4,4, 5];
+
+  function markLegs(){
+    var legs=document.querySelectorAll('#p-drive .leg');
+    if(!legs.length) return;
+    var cur = prog>=0 ? LEGOF[Math.min(prog,LEGOF.length-1)] : -1;
+    legs.forEach(function(el,i){
+      el.classList.toggle('done', cur>=0 && i<cur);
+      el.classList.toggle('here', i===cur);
+      var num=el.querySelector('.num'), h=el.querySelector('h3');
+      if(num){
+        var car=num.querySelector('.car');
+        if(i===cur && !car) num.insertAdjacentHTML('afterbegin','<span class="car" aria-hidden="true">&rsaquo;</span>');
+        if(i!==cur && car) car.remove();
+      }
+      var tag=el.querySelector('.legnow');
+      if(i===cur && !tag && h) h.insertAdjacentHTML('beforeend','<span class="legnow">You&rsquo;re here</span>');
+      if(i!==cur && tag) tag.remove();
+    });
+  }
+
   function mark(){
+    markLegs();
     var miles_=document.querySelectorAll('#p-passing .mile');
     miles_.forEach(function(el,i){
       el.classList.toggle('passed', i<prog);
