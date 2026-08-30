@@ -88,6 +88,8 @@
   .eta .k{font-family:var(--f-d);font-size:.84rem;letter-spacing:.11em;text-transform:uppercase;color:var(--chrome-hi);font-weight:600}
   .eta h2{font-family:var(--f-d);font-size:1.5rem;text-transform:uppercase;letter-spacing:.03em;
     color:var(--chrome-ink);border:none;margin:.1rem 0 .7rem;padding:0}
+  .eta-sub{margin:-.15rem 0 .55rem;font-size:.92rem;color:var(--chrome-dim)}
+  .fine{font-size:.86rem;color:var(--faint);line-height:1.4}
   .eta-grid{display:flex;gap:.6rem}
   .eta-cell{flex:1;background:rgba(255,255,255,.06);border-radius:8px;padding:.55rem .5rem;text-align:center}
   .eta-cell .n{font-family:var(--f-m);font-weight:600;font-size:1.4rem;color:var(--chrome-ink);font-variant-numeric:tabular-nums}
@@ -211,7 +213,7 @@
     </div>
     <div class="sub">
       <p class="who">Russellton &rarr; Aurora IL</p>
-      <span class="whn" id="hdr">~490 MI &middot; ~7H30</span>
+      <span class="whn" id="hdr">~575 MI &middot; ~9H10</span>
     </div>
     </div>
   </div>
@@ -602,22 +604,22 @@
     <div class="card">
       <dl class="dl">
         <div><dt>Family</dt><dd><a target="_blank" href="https://maps.apple.com/?address=2806+Packford+Lane,+Aurora,+IL+60502">2806 Packford Lane, Aurora IL 60502</a></dd></div>
-        <div><dt>VRBO</dt><dd>Send me the address and I&rsquo;ll add it</dd></div>
-        <div><dt>Drive</dt><dd class="mono">~490 mi &middot; ~7h30 moving</dd></div>
+        <div><dt>VRBO</dt><dd><a target="_blank" href="https://maps.apple.com/?address=598+Westfield+Crse,+Geneva,+IL+60134">598 Westfield Crse, Geneva IL 60134</a><br><span class="fine">Geneva, not Aurora &mdash; about 9 miles north of the house, 15 minutes.</span></dd></div>
+        <div><dt>Drive</dt><dd class="mono">~575 mi &middot; ~9h10 moving</dd></div>
         <div><dt>Time zone</dt><dd>Central &mdash; one hour behind Pittsburgh</dd></div>
       </dl>
     </div>
     <div class="card">
       <h3>Realistic arrival</h3>
-      <p>Rolling at <strong>2:00 PM Eastern</strong> with two stops puts you at the house around <strong>8:00&ndash;8:30 PM Central</strong>. One stop instead of two saves about forty minutes.</p>
-      <p>Either way this is a get-in-and-sleep night. <strong>The baby is a tomorrow thing.</strong></p>
+      <p>The card on the Drive tab counts down from wherever you actually are &mdash; miles left, time left, and your real pace once you&rsquo;ve been rolling twenty minutes. It moves as you do.</p>
+      <p>Two addresses, and they are not the same town. The <strong>house is in Aurora</strong>; the <strong>VRBO is in Geneva</strong>, about fifteen minutes north. Late arrival means the VRBO first. <strong>The baby is a tomorrow thing.</strong></p>
     </div>
   </div>
   <div class="grp">
     <h2>Still To Add</h2>
     <div class="card">
       <ul>
-        <li>VRBO address, check-in time, and door code</li>
+        <li>VRBO check-in time and door code</li>
         <li>Anything you want near the house &mdash; coffee, a park for the boys, breakfast</li>
         <li>What time you want to leave Monday, which drives the whole trip home</li>
       </ul>
@@ -698,6 +700,10 @@
     {la:41.660,lo:-86.170},{la:41.570,lo:-87.180},{la:41.850,lo:-88.310}
   ];
   var DEST={la:41.790,lo:-88.245};
+  var VRBO_EXTRA=15;            // minutes from the house on to the Geneva VRBO
+  // road miles still to drive at each waypoint (turnpike mileposts, not straight lines)
+  var REM=[553,548,507,488,468,427,419,395,372,303,266,249,186,120,100,59,49,13,7,0];
+  var TOTAL=575;
 
   function miles(a,b,c,d){
     var R=3958.8,t=Math.PI/180;
@@ -777,6 +783,7 @@
       togo<3?'You&rsquo;re there':'Near '+near.n,
       togo<3?'Aurora':(togo+' miles to Aurora &middot; '+(prog+1)+' of '+ROUTE.length+' passed'));
     mark();
+    if(window.paintETA) window.paintETA();
   }
 
   function onErr(e){
@@ -804,35 +811,74 @@
   if(prog>=0) mark();
   startGPS();
 
-  // ETA card, computed from whenever you actually open it
-  var MOVING=7.5, STOPS=1.0;
+  // ETA card, recomputed from where you actually are
+  var PLAN_MPH=63, STOPS=1.0;
   function pad(n){return String(n).padStart(2,'0')}
+  function hhmm(d){ return d.toLocaleTimeString('en-US',
+    {timeZone:'America/Chicago',hour:'numeric',minute:'2-digit'}); }
+  function hm(h){ var t=Math.max(0,Math.round(h*60)); return Math.floor(t/60)+':'+pad(t%60); }
+
+  // miles left, interpolated inside the segment you're actually in
+  function milesLeft(){
+    if(!window.__pos || prog<0) return null;
+    var i=Math.min(prog,ROUTE.length-1);
+    if(i>=ROUTE.length-1) return Math.round(miles(window.__pos.la,window.__pos.lo,DEST.la,DEST.lo));
+    var segStraight=miles(ROUTE[i].la,ROUTE[i].lo,ROUTE[i+1].la,ROUTE[i+1].lo);
+    var toNext=miles(window.__pos.la,window.__pos.lo,ROUTE[i+1].la,ROUTE[i+1].lo);
+    var frac=segStraight>0?Math.min(1,toNext/segStraight):0;
+    return Math.round(REM[i+1]+(REM[i]-REM[i+1])*frac);
+  }
+
+  // observed pace, so a long lunch or heavy traffic pushes the arrival out
+  var trip=null;
+  try{ trip=JSON.parse(localStorage.getItem('auroraTrip')||'null'); }catch(e){}
+  function pace(left){
+    var now=Date.now();
+    if(!trip || trip.rem<left-15){ trip={t:now,rem:left}; save(); return null; }
+    var hrs=(now-trip.t)/3600000, gone=trip.rem-left;
+    if(hrs<0.33||gone<15) return null;
+    return Math.min(80,Math.max(35,gone/hrs));
+  }
+  function save(){ try{localStorage.setItem('auroraTrip',JSON.stringify(trip))}catch(e){} }
+
   function paint(){
     var now=new Date();
-    var arr=new Date(now.getTime()+(MOVING+STOPS)*3600*1000);
-    // Central = Eastern - 1
-    var ct=new Date(arr.getTime()-3600*1000);
-    function hhmm(d){var h=d.getHours()%12||12;return h+':'+pad(d.getMinutes())+' '+(d.getHours()>=12?'PM':'AM')}
+    var left=milesLeft(), live=left!==null, mph=null, hrs;
+    if(live){
+      mph=pace(left);
+      hrs = mph ? left/mph : left/PLAN_MPH + STOPS*(left/TOTAL);
+    } else {
+      left=TOTAL; hrs=TOTAL/PLAN_MPH+STOPS;
+    }
+    var ct=new Date(now.getTime()+hrs*3600*1000);
+    var vr=new Date(ct.getTime()+VRBO_EXTRA*60000);
+    var hdr=document.getElementById('hdr');
+    if(hdr) hdr.innerHTML = live ? left+' MI LEFT &middot; '+hm(hrs) : '~575 MI &middot; ~9H10';
     document.getElementById('eta').innerHTML =
       '<div class="eta">'+
-        '<div class="k">If you left right now</div>'+
-        '<h2>Aurora by '+hhmm(ct)+' CT</h2>'+
+        '<div class="k">'+(live?'Live &middot; from where you are now':'If you left right now')+'</div>'+
+        '<h2>The house by '+hhmm(ct)+' CT</h2>'+
+        '<p class="eta-sub">VRBO in Geneva about '+hhmm(vr)+'</p>'+
         '<div class="eta-grid">'+
-          '<div class="eta-cell"><div class="n">490</div><div class="l">miles</div></div>'+
-          '<div class="eta-cell"><div class="n">7:30</div><div class="l">moving</div></div>'+
-          '<div class="eta-cell"><div class="n">+1:00</div><div class="l">stops</div></div>'+
-          '<div class="eta-cell"><div class="n">&minus;1</div><div class="l">hour gained</div></div>'+
+          '<div class="eta-cell"><div class="n">'+left+'</div><div class="l">miles left</div></div>'+
+          '<div class="eta-cell"><div class="n">'+hm(hrs)+'</div><div class="l">to go</div></div>'+
+          '<div class="eta-cell"><div class="n">'+(mph?Math.round(mph):PLAN_MPH)+'</div><div class="l">'+(mph?'your mph':'assumed mph')+'</div></div>'+
         '</div>'+
         '<div class="go-row">'+
-          '<a href="https://maps.apple.com/?daddr=2806+Packford+Lane,+Aurora,+IL+60502&dirflg=d" target="_blank">Navigate &rarr;</a>'+
-          '<a class="ghost" href="#passing" data-jump="passing">What we&rsquo;re passing &rarr;</a>'+
+          '<a href="https://maps.apple.com/?daddr=2806+Packford+Lane,+Aurora,+IL+60502&dirflg=d" target="_blank">The house &rarr;</a>'+
+          '<a href="https://maps.apple.com/?daddr=598+Westfield+Crse,+Geneva,+IL+60134&dirflg=d" target="_blank">The VRBO &rarr;</a>'+
+          '<a class="ghost" href="#passing" data-jump="passing">Passing &rarr;</a>'+
         '</div>'+
-        '<p class="eta-note">Assumes 7h30 moving plus an hour of stops. Live traffic is Apple&rsquo;s job, not this page&rsquo;s.</p>'+
+        '<p class="eta-note">'+(mph
+          ? 'Your actual pace so far, stops and all. It moves as you do.'
+          : (live ? 'Assumes '+PLAN_MPH+' mph and a share of the hour of stops. Switches to your real pace after twenty minutes of driving.'
+                  : 'Turn on location and this becomes a live countdown. Traffic is Apple&rsquo;s job, not this page&rsquo;s.'))+'</p>'+
       '</div>';
     var j=document.querySelector('[data-jump]');
     if(j) j.addEventListener('click',function(e){e.preventDefault();show(j.dataset.jump,true)});
   }
-  paint(); setInterval(paint,60000);
+  window.paintETA=paint;
+  paint(); setInterval(paint,30000);
 })();
 </script>
 
