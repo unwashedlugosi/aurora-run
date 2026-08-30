@@ -1,0 +1,588 @@
+<title>Aurora Run</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;600&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+
+<style>
+  :root {
+    --ground:#F2F1EC; --surface:#fff; --surface-alt:#EAE8E0;
+    --ink:#1A1815; --muted:#6E6A5F; --faint:#9C9789; --rule:#DCD9CF;
+    --road:#1E4A6D; --road-2:#2E6B96; --sign:#1B7A3E; --clay:#A64B2A; --clay-bg:#F7EBE4;
+    --chrome:#12233A; --chrome-2:#1E3B5C; --chrome-ink:#EFF3F7; --chrome-dim:#8FA6BC; --chrome-hi:#F2C14E;
+    --shadow:0 1px 2px rgba(20,18,14,.05),0 2px 8px rgba(20,18,14,.05);
+    --f-d:'Barlow Condensed','Arial Narrow',Helvetica,sans-serif;
+    --f-b:'Source Sans 3',-apple-system,BlinkMacSystemFont,sans-serif;
+    --f-m:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --ground:#111316; --surface:#191C20; --surface-alt:#222free; --surface-alt:#22262B;
+    --ink:#ECEFF2; --muted:#98A0A8; --faint:#697078; --rule:#2C3138;
+    --road:#7FB2DB; --road-2:#A8CDEA; --sign:#5FBF83; --clay:#D4783F; --clay-bg:#2C1F16;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 2px 8px rgba(0,0,0,.25);
+  }}
+  :root[data-theme="dark"]{
+    --ground:#111316; --surface:#191C20; --surface-alt:#22262B;
+    --ink:#ECEFF2; --muted:#98A0A8; --faint:#697078; --rule:#2C3138;
+    --road:#7FB2DB; --road-2:#A8CDEA; --sign:#5FBF83; --clay:#D4783F; --clay-bg:#2C1F16;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 2px 8px rgba(0,0,0,.25);
+  }
+  *{box-sizing:border-box} html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--f-b);font-size:16px;line-height:1.55}
+  a{color:var(--road)}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--chrome-hi);outline-offset:2px;border-radius:3px}
+
+  .board{background:var(--chrome);background-image:linear-gradient(160deg,var(--chrome) 0%,var(--chrome-2) 100%);
+    color:var(--chrome-ink);border-bottom:3px solid var(--chrome-hi);position:sticky;top:0;z-index:20}
+  .board-top{max-width:720px;margin:0 auto;padding:.6rem 1rem .45rem}
+  .board h1{font-family:var(--f-d);font-weight:700;font-size:clamp(1.15rem,5.8vw,1.5rem);
+    letter-spacing:.02em;text-transform:uppercase;margin:0;line-height:1.02;white-space:nowrap}
+  .sub{display:flex;align-items:baseline;gap:.5rem;margin-top:.12rem;min-width:0}
+  .who{font-size:.72rem;color:var(--chrome-dim);margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .whn{font-family:var(--f-m);font-size:.64rem;color:var(--chrome-hi);white-space:nowrap;flex-shrink:0;margin-left:auto}
+  .tabs{display:flex;overflow-x:auto;scrollbar-width:none;max-width:720px;margin:0 auto;padding:0 .5rem}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{appearance:none;background:none;border:none;border-bottom:3px solid transparent;margin-bottom:-3px;
+    color:var(--chrome-dim);font-family:var(--f-d);font-weight:600;font-size:.95rem;letter-spacing:.05em;
+    text-transform:uppercase;padding:.42rem .65rem .48rem;cursor:pointer;white-space:nowrap;flex-shrink:0}
+  .tab[aria-selected="true"]{color:var(--chrome-hi);border-bottom-color:var(--chrome-hi)}
+
+  main{max-width:720px;margin:0 auto;padding:1.1rem 1rem 4rem}
+  .panel[hidden]{display:none} .panel{display:flex;flex-direction:column;gap:1.4rem}
+  .grp{display:flex;flex-direction:column;gap:.55rem}
+  h2{font-family:var(--f-d);text-transform:uppercase;letter-spacing:.05em;font-size:1.15rem;font-weight:700;
+    margin:0;padding-bottom:.3rem;border-bottom:2px solid var(--ink);text-wrap:balance}
+  .lede{font-size:.86rem;color:var(--muted);margin:-.15rem 0 .2rem}
+
+  .eta{background:var(--chrome);background-image:linear-gradient(155deg,var(--chrome) 0%,var(--chrome-2) 100%);
+    border-radius:10px;padding:.9rem 1rem 1rem;box-shadow:var(--shadow)}
+  .eta .k{font-family:var(--f-d);font-size:.74rem;letter-spacing:.11em;text-transform:uppercase;color:var(--chrome-hi);font-weight:600}
+  .eta h2{font-family:var(--f-d);font-size:1.3rem;text-transform:uppercase;letter-spacing:.03em;
+    color:var(--chrome-ink);border:none;margin:.1rem 0 .7rem;padding:0}
+  .eta-grid{display:flex;gap:.6rem}
+  .eta-cell{flex:1;background:rgba(255,255,255,.06);border-radius:8px;padding:.55rem .5rem;text-align:center}
+  .eta-cell .n{font-family:var(--f-m);font-weight:600;font-size:1.25rem;color:var(--chrome-ink);font-variant-numeric:tabular-nums}
+  .eta-cell .l{font-family:var(--f-d);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--chrome-dim)}
+  .go-row{display:flex;gap:.5rem;margin-top:.85rem}
+  .go-row a{flex:1;text-align:center;background:var(--chrome-hi);color:var(--chrome);font-family:var(--f-d);
+    font-weight:700;font-size:.9rem;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;
+    padding:.6rem .5rem;border-radius:7px}
+  .go-row a.ghost{background:transparent;border:1px solid var(--chrome-dim);color:var(--chrome-ink)}
+  .eta-note{margin:.6rem 0 0;font-size:.72rem;color:var(--chrome-dim);line-height:1.45}
+
+  .leg{background:var(--surface);border:1px solid var(--rule);border-radius:9px;padding:.8rem .9rem;
+    box-shadow:var(--shadow);display:flex;gap:.75rem}
+  .leg .num{font-family:var(--f-d);font-weight:700;font-size:1.5rem;color:var(--road);min-width:26px;
+    line-height:1;padding-top:.1rem;flex-shrink:0}
+  .leg .body{flex:1;min-width:0}
+  .leg h3{margin:0 0 .1rem;font-size:.98rem;font-weight:700;text-wrap:balance}
+  .leg .meta{font-family:var(--f-m);font-size:.7rem;color:var(--faint);margin-bottom:.35rem}
+  .leg p{margin:0 0 .4rem;font-size:.87rem;color:var(--muted)}
+  .leg p:last-child{margin-bottom:0}
+  .leg a.go{display:inline-block;margin-top:.25rem;font-family:var(--f-m);font-size:.7rem;
+    color:var(--road);text-decoration:none;font-weight:600}
+
+  .stop{background:var(--surface);border:1px solid var(--rule);border-left:4px solid var(--sign);
+    border-radius:9px;padding:.8rem .95rem;box-shadow:var(--shadow)}
+  .stop h3{margin:0 0 .1rem;font-size:.98rem;font-weight:700}
+  .stop .meta{font-family:var(--f-m);font-size:.7rem;color:var(--faint);margin-bottom:.35rem}
+  .stop p{margin:0 0 .4rem;font-size:.87rem;color:var(--muted)}
+  .stop a{color:var(--road);font-weight:600;text-decoration:none}
+  .chips{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.5rem}
+  .chip{font-family:var(--f-d);font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    padding:.1rem .45rem;border-radius:4px;background:var(--surface-alt);color:var(--muted)}
+  .chip.eat{background:var(--sign);color:#fff}
+  .chip.hot{background:var(--chrome-hi);color:var(--chrome)}
+
+  .mile{display:flex;gap:.8rem;padding:.1rem 0}
+  .mile .when{font-family:var(--f-m);font-size:.7rem;font-weight:600;color:var(--road);
+    min-width:52px;flex-shrink:0;padding-top:.95rem;font-variant-numeric:tabular-nums}
+  .mile .what{flex:1;min-width:0;background:var(--surface);border:1px solid var(--rule);
+    border-radius:9px;padding:.75rem .9rem;box-shadow:var(--shadow);margin-bottom:.55rem}
+  .mile h3{margin:0 0 .2rem;font-size:.95rem;font-weight:700;text-wrap:balance}
+  .mile .where{font-family:var(--f-m);font-size:.66rem;color:var(--faint);
+    text-transform:uppercase;letter-spacing:.04em;margin-bottom:.35rem}
+  .mile p{margin:0 0 .4rem;font-size:.87rem;color:var(--muted)}
+  .mile p:last-child{margin-bottom:0}
+  .mile strong{color:var(--ink)}
+  .mile.big .what{border-left:4px solid var(--chrome-hi)}
+  .mile.zone .what{border-left:4px solid var(--clay);background:var(--clay-bg)}
+
+  .card{background:var(--surface);border:1px solid var(--rule);border-radius:9px;padding:.8rem .95rem;box-shadow:var(--shadow)}
+  .card h3{margin:0 0 .3rem;font-size:.98rem;font-weight:700}
+  .card p{margin:0 0 .5rem;font-size:.87rem;color:var(--muted)} .card p:last-child{margin-bottom:0}
+  .card ul{margin:.2rem 0 0;padding:0;list-style:none}
+  .card li{font-size:.87rem;color:var(--muted);padding:.16rem 0 .16rem 1em;position:relative}
+  .card li::before{content:"▸";color:var(--road);position:absolute;left:0}
+  .card strong{color:var(--ink)}
+  .dl>div{display:flex;gap:.7rem;padding:.32rem 0;font-size:.87rem;border-bottom:1px solid var(--rule)}
+  .dl>div:last-child{border-bottom:none}
+  .dl dt{color:var(--faint);min-width:96px;flex-shrink:0;margin:0;font-size:.82rem}
+  .dl dd{margin:0;color:var(--ink);font-weight:600}
+  .dl dd a{color:var(--road);text-decoration:none}
+  .mono{font-family:var(--f-m);font-variant-numeric:tabular-nums}
+
+  .alert{background:var(--clay-bg);border:1px solid color-mix(in srgb,var(--clay) 30%,transparent);
+    border-left:4px solid var(--clay);border-radius:7px;padding:.7rem .85rem;font-size:.87rem;color:var(--ink)}
+  .alert b{color:var(--clay)}
+  footer{max-width:720px;margin:0 auto;padding:1.5rem 1rem 2.5rem;font-family:var(--f-m);
+    font-size:.68rem;color:var(--faint);text-align:center;line-height:1.7}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<header class="board">
+  <div class="board-top">
+    <h1>Aurora Run</h1>
+    <div class="sub">
+      <p class="who">Russellton PA &rarr; Aurora IL</p>
+      <span class="whn" id="hdr">~490 MI &middot; ~7H30</span>
+    </div>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button class="tab" role="tab" data-p="drive" aria-selected="true">The Drive</button>
+    <button class="tab" role="tab" data-p="passing" aria-selected="false">Passing</button>
+    <button class="tab" role="tab" data-p="stops" aria-selected="false">Stops</button>
+    <button class="tab" role="tab" data-p="there" aria-selected="false">Aurora</button>
+    <button class="tab" role="tab" data-p="back" aria-selected="false">Home</button>
+  </nav>
+</header>
+
+<main>
+
+<section class="panel" id="p-drive" role="tabpanel">
+  <div id="eta"></div>
+
+  <div class="grp">
+    <div class="alert">
+      <b>You gain an hour.</b> Pennsylvania and Ohio are Eastern; Indiana&rsquo;s toll-road corridor and Illinois are Central. Your phone flips somewhere around the Indiana line. Every clock time below is <b>local to where you&rsquo;ll be</b>.
+    </div>
+  </div>
+
+  <div class="grp">
+    <h2>The Route</h2>
+    <p class="lede">You already know the first hour &mdash; it&rsquo;s how you came in, just turned the other way.</p>
+
+    <div class="leg">
+      <span class="num">1</span>
+      <div class="body">
+        <h3>PA-28 north to I-80</h3>
+        <div class="meta">~50 MI &middot; ~1 HR &middot; EASTERN</div>
+        <p>Out of Russellton the way you arrived, up the Allegheny valley. At I-80 you go <strong>west</strong> instead of east. No Pittsburgh, no turnpike, no tolls yet.</p>
+      </div>
+    </div>
+
+    <div class="leg">
+      <span class="num">2</span>
+      <div class="body">
+        <h3>I-80 west across Pennsylvania into Ohio</h3>
+        <div class="meta">~90 MI &middot; ~1H20 &middot; EASTERN</div>
+        <p>Clarion, Mercer, then the Ohio line. At the border I-80 becomes the <strong>Ohio Turnpike</strong> &mdash; grab the ticket, pay at the far end.</p>
+      </div>
+    </div>
+
+    <div class="leg">
+      <span class="num">3</span>
+      <div class="body">
+        <h3>Ohio Turnpike to Toledo</h3>
+        <div class="meta">~180 MI &middot; ~2H45 &middot; EASTERN</div>
+        <p>The long flat middle: Youngstown, south of Cleveland, Sandusky, Toledo. Service plazas every 30&ndash;40 miles with gas and bathrooms, so fuel is never a problem &mdash; the food on the mainline is the problem, which is what the Stops tab is for.</p>
+      </div>
+    </div>
+
+    <div class="leg">
+      <span class="num">4</span>
+      <div class="body">
+        <h3>Indiana Toll Road &mdash; and the time change</h3>
+        <div class="meta">~110 MI &middot; ~1H45 &middot; ET &rarr; CT</div>
+        <p>I-80/90 past Elkhart and South Bend. <strong>You pick up an hour here.</strong> Gary and the industrial stretch at the end is the ugliest and slowest part of the day.</p>
+      </div>
+    </div>
+
+    <div class="leg">
+      <span class="num">5</span>
+      <div class="body">
+        <h3>I-80 west, then I-355 north, then I-88 west</h3>
+        <div class="meta">~60 MI &middot; ~1 HR &middot; CENTRAL</div>
+        <p>Stay on <strong>I-80</strong> rather than following I-90 toward Chicago &mdash; you want to go around the bottom, not through. Then <strong>I-355 north</strong> to <strong>I-88 west</strong>, and off at Eola Road or Route 59.</p>
+        <p style="color:var(--faint);font-size:.8rem">Skirting the city this way trades a few miles for missing Chicago traffic entirely. Worth it on a Sunday evening.</p>
+      </div>
+    </div>
+
+    <div class="leg">
+      <span class="num">6</span>
+      <div class="body">
+        <h3>2806 Packford Lane, Aurora IL</h3>
+        <div class="meta">ARRIVE</div>
+        <p>East side of Aurora, just off I-88 near Eola Road.</p>
+        <a class="go" target="_blank" href="https://maps.apple.com/?address=2806+Packford+Lane,+Aurora,+IL+60502">Directions &rarr;</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="grp">
+    <h2>One Tap</h2>
+    <div class="card">
+      <p>Set the whole thing going in Apple Maps, then use the Stops tab as you get near each one.</p>
+      <div class="go-row">
+        <a href="https://maps.apple.com/?daddr=2806+Packford+Lane,+Aurora,+IL+60502&dirflg=d" target="_blank">Navigate to Aurora &rarr;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="panel" id="p-passing" role="tabpanel" hidden>
+  <div class="grp">
+    <div class="alert">
+      Ordered by when you&rsquo;ll hit it, timed off a <b>2:00 PM Eastern</b> departure. Nothing here needs a stop &mdash; it&rsquo;s all out the window or just over the horizon.
+    </div>
+  </div>
+
+  <div class="grp">
+    <h2>Pennsylvania</h2>
+
+    <div class="mile">
+      <span class="when">0:15</span>
+      <div class="what">
+        <h3>Kittanning and the Allegheny</h3>
+        <div class="where">PA-28 north &middot; out the left window</div>
+        <p>You&rsquo;re driving up one of the old highways of North America. Kittanning was a major Lenape town, and the <strong>Kittanning Path</strong> over the mountains was the main east-west trail through Pennsylvania long before any road existed. The river beside you is still run by a chain of locks and dams from the barge era.</p>
+      </div>
+    </div>
+
+    <div class="mile">
+      <span class="when">0:25</span>
+      <div class="what">
+        <h3>Ford City &mdash; the town that made plate glass</h3>
+        <div class="where">Along the river</div>
+        <p>Named for John B. Ford, who built the plate-glass works here. The company he helped start became <strong>PPG</strong>. For a long stretch, a serious share of America&rsquo;s window glass came out of this valley.</p>
+      </div>
+    </div>
+
+    <div class="mile big">
+      <span class="when">1:10</span>
+      <div class="what">
+        <h3>The Emlenton bridge</h3>
+        <div class="where">I-80 west &middot; you drive over it</div>
+        <p>I-80 crosses the Allegheny here on one of the highest bridges on the whole interstate &mdash; the town of Emlenton sits in the gorge <em>underneath</em> you. Blink and it&rsquo;s over, but look down and you&rsquo;ll see rooftops.</p>
+      </div>
+    </div>
+
+    <div class="mile">
+      <span class="when">1:20</span>
+      <div class="what">
+        <h3>Where the oil industry started</h3>
+        <div class="where">40 miles north &middot; Titusville</div>
+        <p>You&rsquo;re skirting the bottom of the world&rsquo;s first oil region. In <strong>1859</strong>, Edwin Drake drilled the first commercially successful oil well near Titusville, and the global petroleum industry started in these hills. The boomtowns are mostly gone; some are literally ghost towns now.</p>
+      </div>
+    </div>
+
+    <div class="mile">
+      <span class="when">1:30</span>
+      <div class="what">
+        <h3>Punxsutawney, off to the south</h3>
+        <div class="where">Behind you now</div>
+        <p>Phil&rsquo;s town, about 25 miles south of the highway. You passed the same junction coming in on Thursday.</p>
+      </div>
+    </div>
+
+    <div class="mile zone">
+      <span class="when">2:20</span>
+      <div class="what">
+        <h3>Ohio line &mdash; the turnpike starts</h3>
+        <div class="where">Take a ticket</div>
+        <p>I-80 becomes the Ohio Turnpike. You pay at the far end, so hang on to it.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="grp">
+    <h2>Ohio</h2>
+
+    <div class="mile big">
+      <span class="when">2:35</span>
+      <div class="what">
+        <h3>Youngstown &mdash; and Black Monday</h3>
+        <div class="where">South of the road</div>
+        <p>Steel town. On <strong>19 September 1977</strong> &mdash; still called Black Monday here &mdash; Youngstown Sheet &amp; Tube announced closures that ended about <strong>5,000 jobs in a single day</strong>. The city lost more than half its population over the following decades. Springsteen wrote a song called &ldquo;Youngstown&rdquo; about exactly this.</p>
+        <p>The valley you&rsquo;re crossing is the reason the phrase &ldquo;Rust Belt&rdquo; exists.</p>
+      </div>
+    </div>
+
+    <div class="mile">
+      <span class="when">2:45</span>
+      <div class="what">
+        <h3>Warren &mdash; where Packard came from</h3>
+        <div class="where">Just north</div>
+        <p>James Ward Packard built his first car here in <strong>1899</strong>, reportedly after being unimpressed with a Winton he&rsquo;d bought and being told by Mr Winton that if he thought he could do better he should go build his own. He did.</p>
+      </div>
+    </div>
+
+    <div class="mile">
+      <span class="when">3:15</span>
+      <div class="what">
+        <h3>Akron, and a river that caught fire</h3>
+        <div class="where">South &middot; Cuyahoga valley</div>
+        <p>Akron was the <strong>rubber capital of the world</strong> &mdash; Goodyear, Firestone, and the tyres on most American cars for most of a century. Alcoholics Anonymous was founded there in 1935.</p>
+        <p>And the Cuyahoga River, which you cross, was so polluted it <strong>caught fire</strong> &mdash; most famously in 1969. That fire helped push through the Clean Water Act and the creation of the EPA. The river is clean enough for fish now.</p>
+      </div>
+    </div>
+
+    <div class="mile">
+      <span class="when">4:00</span>
+      <div class="what">
+        <h3>Lake Erie, and a teenage commodore</h3>
+        <div class="where">North &middot; Sandusky</div>
+        <p>Cedar Point is out on its peninsula north of you &mdash; more roller coasters than almost anywhere on earth. Further out on the lake, in <strong>1813</strong>, Oliver Hazard Perry beat a British squadron and sent the line every kid should get to say out loud: <em>&ldquo;We have met the enemy and they are ours.&rdquo;</em> He was 27.</p>
+      </div>
+    </div>
+
+    <div class="mile big">
+      <span class="when">4:30</span>
+      <div class="what">
+        <h3>The Great Black Swamp</h3>
+        <div class="where">You are driving across the bottom of it</div>
+        <p>This is the best answer to &ldquo;why is it suddenly so <em>flat</em>.&rdquo; Northwest Ohio was a <strong>swamp the size of Connecticut</strong> &mdash; roughly 1,500 square miles of standing water and hardwood forest, left behind by a glacial lake. It was close to impassable. Settlers went around it for decades; it&rsquo;s why this corner of Ohio was settled so much later than the rest.</p>
+        <p>It was drained in the 1800s with ditches and clay tile, and the swamp floor turned out to be some of the richest farmland in the country. Every flat black field you can see was underwater.</p>
+      </div>
+    </div>
+
+    <div class="mile">
+      <span class="when">4:45</span>
+      <div class="what">
+        <h3>Toledo &mdash; and the war over it</h3>
+        <div class="where">Around you</div>
+        <p>Glass city: Libbey and Owens made Toledo the centre of American glassmaking, and Jeep has been built here since the war.</p>
+        <p>Better story: in <strong>1835 Ohio and Michigan nearly fought a war over this spot.</strong> Both claimed the Toledo Strip, both sent militia, and there was a lot of marching and almost no shooting. Congress settled it &mdash; Ohio kept Toledo, and Michigan was handed the <strong>Upper Peninsula</strong> as a consolation prize. Michigan thought it had been robbed. Then they found iron and copper up there.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="grp">
+    <h2>Indiana</h2>
+
+    <div class="mile zone">
+      <span class="when">5:15</span>
+      <div class="what">
+        <h3>You just gained an hour</h3>
+        <div class="where">Eastern &rarr; Central</div>
+        <p>Phones will flip on their own. Indiana&rsquo;s time-zone map is genuinely strange &mdash; the northwest corner runs on Chicago time, most of the state runs on New York time, and for years much of it refused to observe daylight saving at all.</p>
+      </div>
+    </div>
+
+    <div class="mile">
+      <span class="when">5:30</span>
+      <div class="what">
+        <h3>Elkhart makes almost every RV in America</h3>
+        <div class="where">Right along the toll road</div>
+        <p>Somewhere around <strong>four-fifths of the RVs in the United States</strong> are built within a few miles of here. Watch the shoulder &mdash; you&rsquo;ll start seeing brand-new ones being driven out in convoys. The town was also a band-instrument capital; a lot of school trumpets came from Elkhart.</p>
+      </div>
+    </div>
+
+    <div class="mile">
+      <span class="when">5:45</span>
+      <div class="what">
+        <h3>South Bend &mdash; Notre Dame and Studebaker</h3>
+        <div class="where">South of the road</div>
+        <p>The Golden Dome and the stadium are a couple of miles off the highway. <strong>Studebaker</strong> built wagons and then cars here for over a century &mdash; they made wagons for the Union Army before they ever made an automobile &mdash; until the plant closed in 1963 and took the city&rsquo;s economy with it.</p>
+      </div>
+    </div>
+
+    <div class="mile big">
+      <span class="when">6:20</span>
+      <div class="what">
+        <h3>Gary, and the biggest steel mill in the country</h3>
+        <div class="where">Both sides &middot; unmistakable</div>
+        <p>The industrial skyline coming up is <strong>Gary Works</strong> &mdash; built by US Steel starting in 1906, on empty dunes, with a whole city laid out around it and named after the company&rsquo;s chairman. At its peak it was the largest steel mill on earth. It still runs.</p>
+        <p>Gary is also where the <strong>Jackson family</strong> lived; Michael was born there in 1958, in a two-bedroom house.</p>
+      </div>
+    </div>
+
+    <div class="mile">
+      <span class="when">6:30</span>
+      <div class="what">
+        <h3>Sand dunes, in between the mills</h3>
+        <div class="where">North &middot; Lake Michigan</div>
+        <p><strong>Indiana Dunes</strong> became a national park in 2019 &mdash; big Lake Michigan dunes wedged directly between steel mills and refineries. One of the odder juxtapositions in the park system, and one of the most biodiverse places in the Midwest.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="grp">
+    <h2>Illinois</h2>
+
+    <div class="mile">
+      <span class="when">7:00</span>
+      <div class="what">
+        <h3>I-88 is the Ronald Reagan Memorial Tollway</h3>
+        <div class="where">The last leg</div>
+        <p>Named for him because he grew up out this way &mdash; born in Tampico, raised in Dixon, both further west along this same road.</p>
+      </div>
+    </div>
+
+    <div class="mile big">
+      <span class="when">7:20</span>
+      <div class="what">
+        <h3>Fermilab &mdash; and its bison</h3>
+        <div class="where">Batavia &middot; minutes from the house</div>
+        <p>America&rsquo;s great particle-physics lab is right next door to where you&rsquo;re sleeping. The <strong>top quark was discovered here</strong> in 1995. From the road you can see Wilson Hall rising out of the prairie like something that landed.</p>
+        <p>And there is a <strong>herd of American bison living on the site</strong>, kept there since <strong>1969</strong> &mdash; the founding director started it as a link to the prairie the lab was built on. You can drive in and look at them, free. That is a genuinely great thing to do with a five-year-old tomorrow.</p>
+      </div>
+    </div>
+
+    <div class="mile big">
+      <span class="when">7:30</span>
+      <div class="what">
+        <h3>Aurora, the City of Lights</h3>
+        <div class="where">Arrive</div>
+        <p>On <strong>8 November 1881</strong>, Aurora switched on sixteen electric arc lamps mounted on seven towers <strong>150 feet tall</strong> &mdash; enough, in theory, to light the entire city electrically, when most of America was still on gas. It took the nickname &ldquo;City of Lights&rdquo; officially in 1908.</p>
+        <p>Also, and Max may care more about this: <strong>Wayne&rsquo;s World is set in Aurora.</strong> Party on.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="panel" id="p-stops" role="tabpanel" hidden>
+  <div class="grp">
+    <div class="alert">
+      These are <b>map searches, not fixed addresses</b> &mdash; each one opens Apple Maps and finds the actual nearest branch with today&rsquo;s hours. Culver&rsquo;s closes earlier on Sundays than weekdays, so check hours before committing to a late one.
+    </div>
+  </div>
+
+  <div class="grp">
+    <h2>Culver&rsquo;s, In Order</h2>
+    <p class="lede">Roughly one every two hours, which is about the right spacing anyway.</p>
+
+    <div class="stop">
+      <h3>1 &middot; Austintown / Boardman, OH</h3>
+      <div class="meta">~2 HRS IN &middot; NEAR THE I-80 / OH-11 AREA &middot; EASTERN</div>
+      <p>First real cluster of anything after the Pennsylvania woods. If you left around 2, this lands near <strong>4:00 PM</strong> &mdash; early for dinner, right for kids who have been at a ballfield since morning.</p>
+      <a target="_blank" href="https://maps.apple.com/?q=Culvers+Austintown+OH">Find it &rarr;</a>
+      <div class="chips"><span class="chip eat">Culver&rsquo;s</span><span class="chip hot">Best first stop</span></div>
+    </div>
+
+    <div class="stop">
+      <h3>2 &middot; Toledo / Perrysburg, OH</h3>
+      <div class="meta">~4H30 IN &middot; OFF I-80 SOUTH OF TOLEDO &middot; EASTERN</div>
+      <p>The natural dinner stop and the last one before the time change. Around <strong>6:30 PM</strong> on a 2 o&rsquo;clock departure. Perrysburg sits just off the turnpike and is easier in and out than central Toledo.</p>
+      <a target="_blank" href="https://maps.apple.com/?q=Culvers+Perrysburg+OH">Find it &rarr;</a>
+      <div class="chips"><span class="chip eat">Culver&rsquo;s</span><span class="chip hot">Dinner</span></div>
+    </div>
+
+    <div class="stop">
+      <h3>3 &middot; Elkhart / Mishawaka / South Bend, IN</h3>
+      <div class="meta">~6 HRS IN &middot; OFF THE TOLL ROAD &middot; CENTRAL AFTER HERE</div>
+      <p>Last good stop before the Gary stretch. Clock says roughly <strong>6:30 PM Central</strong> &mdash; you gained the hour, so it feels earlier than it is. Ice cream stop rather than a meal if you ate in Ohio.</p>
+      <a target="_blank" href="https://maps.apple.com/?q=Culvers+Mishawaka+IN">Find it &rarr;</a>
+      <div class="chips"><span class="chip eat">Culver&rsquo;s</span><span class="chip">Custard</span></div>
+    </div>
+
+    <div class="stop">
+      <h3>4 &middot; Near the house</h3>
+      <div class="meta">AURORA / NAPERVILLE &middot; CENTRAL</div>
+      <p>There are several within a few minutes of Packford Lane. Useful to know for tomorrow more than tonight.</p>
+      <a target="_blank" href="https://maps.apple.com/?q=Culvers+near+Aurora+IL+60502">Find it &rarr;</a>
+      <div class="chips"><span class="chip eat">Culver&rsquo;s</span></div>
+    </div>
+  </div>
+
+  <div class="grp">
+    <h2>If You&rsquo;d Rather Not Stop Twice</h2>
+    <div class="card">
+      <p>Do <strong>Austintown around 4:00</strong> as a real meal and treat everything after as gas-and-bathroom only. That gets you to Aurora meaningfully earlier, and the Ohio Turnpike plazas handle fuel without leaving the road.</p>
+      <p>The reverse also works: push straight through to <strong>Perrysburg at 6:30</strong> for one proper dinner. Longer first leg, but only one real stop.</p>
+    </div>
+  </div>
+</section>
+
+<section class="panel" id="p-there" role="tabpanel" hidden>
+  <div class="grp">
+    <h2>Aurora</h2>
+    <div class="card">
+      <dl class="dl">
+        <div><dt>Family</dt><dd><a target="_blank" href="https://maps.apple.com/?address=2806+Packford+Lane,+Aurora,+IL+60502">2806 Packford Lane, Aurora IL 60502</a></dd></div>
+        <div><dt>VRBO</dt><dd>Send me the address and I&rsquo;ll add it</dd></div>
+        <div><dt>Drive</dt><dd class="mono">~490 mi &middot; ~7h30 moving</dd></div>
+        <div><dt>Time zone</dt><dd>Central &mdash; one hour behind Pittsburgh</dd></div>
+      </dl>
+    </div>
+    <div class="card">
+      <h3>Realistic arrival</h3>
+      <p>Rolling at <strong>2:00 PM Eastern</strong> with two stops puts you at the house around <strong>8:00&ndash;8:30 PM Central</strong>. One stop instead of two saves about forty minutes.</p>
+      <p>Either way this is a get-in-and-sleep night. <strong>The baby is a tomorrow thing.</strong></p>
+    </div>
+  </div>
+  <div class="grp">
+    <h2>Still To Add</h2>
+    <div class="card">
+      <ul>
+        <li>VRBO address, check-in time, and door code</li>
+        <li>Anything you want near the house &mdash; coffee, a park for the boys, breakfast</li>
+        <li>What time you want to leave Monday, which drives the whole trip home</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="panel" id="p-back" role="tabpanel" hidden>
+  <div class="grp">
+    <h2>The Drive Home</h2>
+    <div class="card">
+      <p><strong>Stage two &mdash; not built yet, by design.</strong> You said overnight, and an overnight run needs different things than this one: where to stop when everyone&rsquo;s asleep, which plazas are open at 2 AM, when to swap drivers, and what&rsquo;s open for coffee in the dead middle of Ohio.</p>
+      <p>Tell me when you&rsquo;re planning to pull out of Aurora and I&rsquo;ll build it around that. Aurora to Port Washington is roughly <strong>800 miles, 12 hours moving</strong> &mdash; a different animal from today.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  RUSSELLTON PA &rarr; AURORA IL &rarr; PORT WASHINGTON NY
+</footer>
+
+<script>
+(function(){
+  var tabs=[].slice.call(document.querySelectorAll('.tab'));
+  function show(n,push){
+    var ok=false;
+    tabs.forEach(function(t){
+      var on=t.dataset.p===n; if(on) ok=true;
+      t.setAttribute('aria-selected',on?'true':'false');
+      document.getElementById('p-'+t.dataset.p).hidden=!on;
+    });
+    if(!ok) return show('drive',push);
+    if(push){ try{history.replaceState(null,'','#'+n)}catch(e){} }
+    window.scrollTo({top:0,behavior:'auto'});
+  }
+  tabs.forEach(function(t){t.addEventListener('click',function(){show(t.dataset.p,true)})});
+  show((location.hash||'#drive').slice(1),false);
+
+  // ETA card, computed from whenever you actually open it
+  var MOVING=7.5, STOPS=1.0;
+  function pad(n){return String(n).padStart(2,'0')}
+  function paint(){
+    var now=new Date();
+    var arr=new Date(now.getTime()+(MOVING+STOPS)*3600*1000);
+    // Central = Eastern - 1
+    var ct=new Date(arr.getTime()-3600*1000);
+    function hhmm(d){var h=d.getHours()%12||12;return h+':'+pad(d.getMinutes())+' '+(d.getHours()>=12?'PM':'AM')}
+    document.getElementById('eta').innerHTML =
+      '<div class="eta">'+
+        '<div class="k">If you left right now</div>'+
+        '<h2>Aurora by '+hhmm(ct)+' CT</h2>'+
+        '<div class="eta-grid">'+
+          '<div class="eta-cell"><div class="n">490</div><div class="l">miles</div></div>'+
+          '<div class="eta-cell"><div class="n">7:30</div><div class="l">moving</div></div>'+
+          '<div class="eta-cell"><div class="n">+1:00</div><div class="l">stops</div></div>'+
+          '<div class="eta-cell"><div class="n">&minus;1</div><div class="l">hour gained</div></div>'+
+        '</div>'+
+        '<div class="go-row">'+
+          '<a href="https://maps.apple.com/?daddr=2806+Packford+Lane,+Aurora,+IL+60502&dirflg=d" target="_blank">Navigate &rarr;</a>'+
+          '<a class="ghost" href="#passing" data-jump="passing">What we&rsquo;re passing &rarr;</a>'+
+        '</div>'+
+        '<p class="eta-note">Assumes 7h30 moving plus an hour of stops. Live traffic is Apple&rsquo;s job, not this page&rsquo;s.</p>'+
+      '</div>';
+    var j=document.querySelector('[data-jump]');
+    if(j) j.addEventListener('click',function(e){e.preventDefault();show(j.dataset.jump,true)});
+  }
+  paint(); setInterval(paint,60000);
+})();
+</script>
