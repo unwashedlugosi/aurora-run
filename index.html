@@ -90,6 +90,20 @@
     color:var(--chrome-ink);border:none;margin:.1rem 0 .7rem;padding:0}
   .eta-sub{margin:-.15rem 0 .55rem;font-size:.92rem;color:var(--chrome-dim)}
   .fine{font-size:.86rem;color:var(--faint);line-height:1.4}
+  .lnav{background:var(--chrome);color:var(--chrome-ink);border-radius:9px;
+    padding:.7rem .85rem;margin:0 0 .8rem;box-shadow:var(--shadow)}
+  .lnav .k{font-family:var(--f-d);font-size:.76rem;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--chrome-hi);font-weight:700}
+  .lnav .big{font-size:1.1rem;font-weight:700;line-height:1.25;margin:.12rem 0 .1rem;text-wrap:balance}
+  .lnav .sub{font-family:var(--f-m);font-size:.8rem;color:var(--chrome-dim)}
+  .lnav .bars{display:flex;gap:.22rem;margin-top:.55rem}
+  .lnav .bars i{flex:1;height:7px;border-radius:3px;background:rgba(255,255,255,.16)}
+  .lnav .bars i.done{background:var(--chrome-dim)}
+  .lnav .bars i.on{background:var(--chrome-hi);box-shadow:0 0 0 2px rgba(242,193,78,.25)}
+  .lnav button{appearance:none;margin-top:.6rem;background:var(--chrome-hi);color:var(--chrome);
+    border:none;border-radius:7px;font-family:var(--f-d);font-weight:700;font-size:.95rem;
+    letter-spacing:.04em;text-transform:uppercase;padding:.5rem .9rem;cursor:pointer}
+  .lnav.off{border-left:5px solid var(--chrome-hi)}
   .eta-grid{display:flex;gap:.6rem}
   .eta-cell{flex:1;background:rgba(255,255,255,.06);border-radius:8px;padding:.55rem .5rem;text-align:center}
   .eta-cell .n{font-family:var(--f-m);font-weight:600;font-size:1.4rem;color:var(--chrome-ink);font-variant-numeric:tabular-nums}
@@ -239,14 +253,15 @@
 
   <div class="grp">
     <h2>The Route</h2>
+    <div id="legnav"></div>
     <p class="lede">You already know the first hour &mdash; it&rsquo;s how you came in, just turned the other way.</p>
 
     <div class="leg">
       <span class="num">1</span>
       <div class="body">
         <h3>PA-28 north to I-80</h3>
-        <div class="meta">~50 MI &middot; ~1 HR &middot; EASTERN</div>
-        <p>Out of Russellton the way you arrived, up the Allegheny valley. At I-80 you go <strong>west</strong> instead of east. No Pittsburgh, no turnpike, no tolls yet.</p>
+        <div class="meta">~68 MI &middot; ~1H20 &middot; EASTERN</div>
+        <p>Out of Russellton the way you arrived, up the Allegheny valley. PA-28 meets I-80 at Brookville, which is <strong>forty miles east of Russellton</strong> &mdash; you drive an hour to start out further from Chicago, then turn west. No Pittsburgh, no turnpike, no tolls yet.</p>
       </div>
     </div>
 
@@ -254,7 +269,7 @@
       <span class="num">2</span>
       <div class="body">
         <h3>I-80 west across Pennsylvania into Ohio</h3>
-        <div class="meta">~90 MI &middot; ~1H20 &middot; EASTERN</div>
+        <div class="meta">~80 MI &middot; ~1H15 &middot; EASTERN</div>
         <p>Clarion, Mercer, then the Ohio line. At the border I-80 becomes the <strong>Ohio Turnpike</strong> &mdash; grab the ticket, pay at the far end.</p>
       </div>
     </div>
@@ -262,9 +277,9 @@
     <div class="leg">
       <span class="num">3</span>
       <div class="body">
-        <h3>Ohio Turnpike to Toledo</h3>
-        <div class="meta">~180 MI &middot; ~2H45 &middot; EASTERN</div>
-        <p>The long flat middle: Youngstown, south of Cleveland, Sandusky, Toledo. Service plazas every 30&ndash;40 miles with gas and bathrooms, so fuel is never a problem &mdash; the food on the mainline is the problem, which is what the Stops tab is for.</p>
+        <h3>Ohio Turnpike, end to end</h3>
+        <div class="meta">~240 MI &middot; ~3H40 &middot; EASTERN</div>
+        <p>The long flat middle: Youngstown, south of Cleveland, Sandusky, Toledo, and on to the Indiana line. Service plazas every 30&ndash;40 miles with gas and bathrooms, so fuel is never a problem &mdash; the food on the mainline is the problem, which is what the Stops tab is for.</p>
       </div>
     </div>
 
@@ -272,7 +287,7 @@
       <span class="num">4</span>
       <div class="body">
         <h3>Indiana Toll Road &mdash; and the time change</h3>
-        <div class="meta">~110 MI &middot; ~1H45 &middot; ET &rarr; CT</div>
+        <div class="meta">~136 MI &middot; ~2H05 &middot; ET &rarr; CT</div>
         <p>I-80/90 past Elkhart and South Bend. <strong>You pick up an hour here.</strong> Gary and the industrial stretch at the end is the ugliest and slowest part of the day.</p>
       </div>
     </div>
@@ -281,7 +296,7 @@
       <span class="num">5</span>
       <div class="body">
         <h3>I-80 west, then I-355 north, then I-88 west</h3>
-        <div class="meta">~60 MI &middot; ~1 HR &middot; CENTRAL</div>
+        <div class="meta">~50 MI &middot; ~1 HR &middot; CENTRAL</div>
         <p>Stay on <strong>I-80</strong> rather than following I-90 toward Chicago &mdash; you want to go around the bottom, not through. Then <strong>I-355 north</strong> to <strong>I-88 west</strong>, and off at Eola Road or Route 59.</p>
         <p style="color:var(--faint);font-size:.8rem">Skirting the city this way trades a few miles for missing Chicago traffic entirely. Worth it on a Sunday evening.</p>
       </div>
@@ -727,10 +742,36 @@
   // which of the six legs each route waypoint belongs to
   var LEGOF=[0,0, 1,1,1, 2,2,2,2,2,2,2, 3,3,3,3,3, 4,4, 5];
 
+  var LEGNAMES=['PA-28 north to I-80','I-80 west across Pennsylvania',
+    'Ohio Turnpike, end to end','Indiana Toll Road','I-80, I-355, I-88','Packford Lane'];
+
+  function legnav(cur){
+    var el=document.getElementById('legnav');
+    if(!el) return;
+    if(cur<0){
+      el.innerHTML='<div class="lnav off"><div class="k">Location off</div>'+
+        '<div class="big">The route can&rsquo;t tell you where you are yet</div>'+
+        '<div class="sub">Turn it on and this marks the leg you&rsquo;re in.</div>'+
+        '<button id="lgo">Turn on location</button></div>';
+      var g=document.getElementById('lgo');
+      if(g) g.addEventListener('click',startGPS);
+      return;
+    }
+    var bars='';
+    for(var i=0;i<LEGNAMES.length;i++)
+      bars+='<i class="'+(i<cur?'done':(i===cur?'on':''))+'"></i>';
+    var left=(typeof milesLeft==='function')?milesLeft():null;
+    el.innerHTML='<div class="lnav"><div class="k">You are on leg '+(cur+1)+' of 6</div>'+
+      '<div class="big">'+LEGNAMES[cur]+'</div>'+
+      (left!==null?'<div class="sub">'+left+' miles left &middot; '+(6-cur-1)+' legs after this one</div>':'')+
+      '<div class="bars">'+bars+'</div></div>';
+  }
+
   function markLegs(){
     var legs=document.querySelectorAll('#p-drive .leg');
     if(!legs.length) return;
     var cur = prog>=0 ? LEGOF[Math.min(prog,LEGOF.length-1)] : -1;
+    legnav(cur);
     legs.forEach(function(el,i){
       el.classList.toggle('done', cur>=0 && i<cur);
       el.classList.toggle('here', i===cur);
@@ -808,6 +849,7 @@
 
   gpsCard('Follow the drive','Use my location',
     'Greys out what you&rsquo;ve passed and jumps to whatever is out the window now.','Turn it on');
+  markLegs();
   if(prog>=0) mark();
   startGPS();
 
