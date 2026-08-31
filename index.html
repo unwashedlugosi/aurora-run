@@ -174,6 +174,46 @@
   .fine{font-size:.86rem;color:var(--faint);line-height:1.4;display:block}
   .mono{font-family:var(--f-m);font-size:.9rem}
 
+  .wx{background:var(--chrome);background-image:linear-gradient(155deg,var(--chrome) 0%,var(--chrome-2) 100%);
+    color:var(--chrome-ink);border-radius:12px;padding:1rem;box-shadow:var(--shadow);margin-bottom:.9rem}
+  .wx .k{font-family:var(--f-d);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--chrome-hi);font-weight:700}
+  .wx .row{display:flex;align-items:center;gap:.8rem;margin-top:.2rem}
+  .wx .deg{font-family:var(--f-m);font-weight:600;font-size:3rem;line-height:1;font-variant-numeric:tabular-nums}
+  .wx .ic{font-size:2.4rem;line-height:1}
+  .wx .row{align-items:flex-start}
+  .wx .cond{display:block;font-size:1.05rem;font-weight:700;line-height:1.2}
+  .wx .det{display:block;font-size:.88rem;color:var(--chrome-dim);margin-top:.15rem;line-height:1.35}
+  .wx .deg{padding-top:.1rem}
+  .wxr{background:var(--surface);border:1px solid var(--rule);border-radius:9px;box-shadow:var(--shadow);
+    overflow:hidden}
+  .wxr .r{display:flex;align-items:flex-start;gap:.55rem;padding:.6rem .7rem;border-bottom:1px solid var(--rule)}
+  .wxr .r:last-child{border-bottom:none}
+  .wxr .r.arr{background:var(--surface-alt)}
+  .wxr .r.past{opacity:.36}
+  .wxr .pl{flex:1;min-width:0}
+  .wxr .pl b{display:block;font-size:.96rem;font-weight:700;line-height:1.25;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .wxr .pl span{display:block;font-family:var(--f-m);font-size:.72rem;color:var(--faint);line-height:1.35}
+  .wxr .e{font-size:1.3rem;line-height:1;flex-shrink:0;margin-top:.1rem}
+  .wxr .t{font-family:var(--f-m);font-weight:600;font-size:1.05rem;min-width:46px;text-align:right;flex-shrink:0;
+    font-variant-numeric:tabular-nums;line-height:1.2}
+  .wxr .rn{font-family:var(--f-m);font-size:.74rem;color:var(--road);min-width:34px;text-align:right;flex-shrink:0;
+    line-height:1.7}
+  .wxr .rn.dry{color:var(--faint)}
+  .dep{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.7rem;
+    background:var(--surface);border:1px solid var(--rule);border-radius:9px;padding:.6rem .75rem}
+  .dep label{font-family:var(--f-d);font-size:.85rem;letter-spacing:.05em;text-transform:uppercase;color:var(--faint)}
+  .dep input,.dep select{font:inherit;font-size:.95rem;padding:.3rem .4rem;border:1px solid var(--rule);
+    border-radius:6px;background:var(--surface);color:var(--ink)}
+  .place{background:var(--surface);border:1px solid var(--rule);border-left:4px solid var(--road);
+    border-radius:9px;padding:.75rem .9rem;box-shadow:var(--shadow);margin-bottom:.6rem}
+  .place.near{border-left-color:var(--sign)}
+  .place h3{margin:0 0 .1rem;font-size:1.08rem;font-weight:700}
+  .place .meta{font-family:var(--f-m);font-size:.78rem;color:var(--faint);margin-bottom:.3rem}
+  .place p{margin:0 0 .45rem;font-size:.98rem;color:var(--muted)}
+  .place a{font-family:var(--f-m);font-size:.82rem;font-weight:600;text-decoration:none}
+
   @media (max-width:560px){
     main{padding:.9rem .6rem 4rem}
     .leg{padding:.8rem .7rem}
@@ -200,6 +240,8 @@
   <nav class="tabs" role="tablist">
     <button class="tab" role="tab" data-p="now" aria-selected="true">How Long</button>
     <button class="tab" role="tab" data-p="route" aria-selected="false">Route</button>
+    <button class="tab" role="tab" data-p="wx" aria-selected="false">Weather</button>
+    <button class="tab" role="tab" data-p="here" aria-selected="false">Here</button>
     <button class="tab" role="tab" data-p="stops" aria-selected="false">Stops</button>
     <button class="tab" role="tab" data-p="info" aria-selected="false">Info</button>
   </nav>
@@ -227,6 +269,36 @@
     <h2>The Route</h2>
     <p class="lede">I-80 the whole way once you&rsquo;re past Chicago. Seven pieces, and the fifth one is most of the night.</p>
     <div id="legs"></div>
+  </div>
+</section>
+
+<section class="panel" id="p-wx" role="tabpanel" hidden>
+  <div id="wxnow"></div>
+  <div class="grp">
+    <h2>On The Way Home</h2>
+    <p class="lede">What the sky is doing where you&rsquo;ll be, at the hour you&rsquo;ll be there. Times are local to each place.</p>
+    <div id="wxdep"></div>
+    <div id="wxroute"></div>
+  </div>
+</section>
+
+<section class="panel" id="p-here" role="tabpanel" hidden>
+  <div class="grp">
+    <h2>Eat</h2>
+    <p class="lede">Downtown Geneva is a mile and a half from the house &mdash; Third Street and State Street, walkable once you park. Distances are straight-line from the VRBO.</p>
+    <div id="eat"></div>
+  </div>
+  <div class="grp">
+    <h2>Stores</h2>
+    <p class="lede">Two of these are five minutes away. The big-box run is Randall Road, ten minutes west.</p>
+    <div id="shops"></div>
+  </div>
+  <div class="grp">
+    <div class="alert">
+      <b>I checked that these places exist and where they are, not whether they&rsquo;re open tonight.</b>
+      Locations came from OpenStreetMap and the chains&rsquo; own store lists. Hours change, and Monday is the
+      day small restaurants close. Tap through and call before you drive.
+    </div>
   </div>
 </section>
 
@@ -414,6 +486,7 @@
   function hm(h){ var t=Math.max(0,Math.round(h*60)); return Math.floor(t/60)+':'+pad(t%60); }
 
   /* ---------- one number: miles travelled ---------- */
+  var wxData=null, wxErr=false;
   var pos=null, gpsState='idle', gpsWatch=null;   // idle | asking | on | failed
   try{ pos=JSON.parse(localStorage.getItem('homePos')||'null'); }catch(e){}
   if(pos && typeof pos.m!=='number') pos=null;
@@ -522,6 +595,10 @@
     document.querySelectorAll('#stops .stop').forEach(function(el,i){
       el.classList.toggle('done', set && STOPS[i][1] < m-6);
     });
+
+    // keep the forecast times honest as the position moves, but never
+    // yank the departure box out from under someone typing in it
+    if((wxData||wxErr) && document.activeElement!==document.getElementById('dep')) paintWx();
   }
 
   function picks(leg){
@@ -545,9 +622,214 @@
         encodeURIComponent("Culver's "+s[0])+'">Find it &rarr;</a></div>';
   }).join('');
 
+  /* ---------- around the house ---------- */
+  var VR={la:41.8958,lo:-88.2847};
+  function amap(q){ return 'https://maps.apple.com/?q='+encodeURIComponent(q); }
+  function dist(la,lo){ return miles(VR.la,VR.lo,la,lo); }
+
+  // Everything below was checked against OpenStreetMap or the chain's own store list.
+  var EAT=[
+    ['Egg Harbor Cafe','477 S 3rd St, Geneva',41.88306,-88.30825,
+     'Breakfast and lunch only, right on Third Street. The obvious first morning with kids.'],
+    ['Bien Trucha','410 W State St, Geneva',41.88796,-88.30983,
+     'The one people drive to Geneva for. Modern Mexican, small room, no reservations — put your name in and walk Third Street while you wait.'],
+    ['Altiro Latin Fusion','Ford St, Geneva',41.89200,-88.31556,
+     'Latin, tacos and bowls, louder and easier than Bien Trucha. Better bet with a full table.'],
+    ['Foxfire','17 W State St, Geneva',41.88779,-88.30445,
+     'Old-school American supper-club end of things. The grown-up dinner if you get one.'],
+    ["Atwater's at the Herrington",'15 S River Ln, Geneva',41.88685,-88.30353,
+     'In the inn on the river. The nicest room in town and the one to book ahead.'],
+    ["Graham's Chocolates",'Franklin St, Geneva',41.88459,-88.30897,
+     'Chocolate and ice cream a block off Third. This is the after-dinner move.'],
+    ["Portillo's",'531 N Randall Rd, Batavia',41.86087,-88.34140,
+     'Chicago hot dogs and Italian beef. Ten minutes west, and the thing the boys will actually ask for.'],
+    ["Culver's",'Randall Rd, St. Charles',41.9200,-88.3400,
+     'Two on Randall Road, St. Charles and Batavia. You know what this is.']
+  ];
+  var SHOP=[
+    ['Aldi','975 E State St, Geneva',41.88835,-88.28823,
+     'Half a mile. Groceries, diapers, whatever the baby house is out of. Closest thing to the door.'],
+    ['CVS','765 E State St, Geneva',41.88789,-88.29014,
+     'Same half mile. Pharmacy, formula, sunscreen, the forgotten charger.'],
+    ['Target','115 N Randall Rd, Batavia',41.85232,-88.34277,
+     'The real Target run, ten minutes west. A second one sits on Route 64 in St. Charles if this one is a mess.'],
+    ["Trader Joe's",'1942 W Fabyan Pkwy, Batavia',41.86390,-88.33853,
+     'Next to the Walgreens on Fabyan. Best stop for road food that is not gas-station road food.'],
+    ['Walgreens','1918 W Fabyan Pkwy, Batavia',41.86435,-88.33764,'Second pharmacy option, out on Fabyan.'],
+    ['Jewel-Osco','119 S Randall Rd, Batavia',41.84828,-88.34240,'Full-size grocery on Randall, near the Target.'],
+    ['Geneva Commons','Randall Rd, Geneva',41.89298,-88.34256,
+     'Open-air mall on Randall — the clothes-and-shoes cluster if somebody forgot something.']
+  ];
+  function placeCard(a,near){
+    var d=dist(a[2],a[3]);
+    return '<div class="place'+(d<1.5?' near':'')+'"><h3>'+a[0]+'</h3>'+
+      '<div class="meta">'+d.toFixed(1)+' MI &middot; '+a[1]+'</div>'+
+      '<p>'+a[4]+'</p><a target="_blank" href="'+amap(a[0]+', '+a[1])+'">Directions &rarr;</a></div>';
+  }
+  document.getElementById('eat').innerHTML =
+    EAT.map(function(a){return placeCard(a)}).join('');
+  document.getElementById('shops').innerHTML =
+    SHOP.map(function(a){return placeCard(a)}).join('');
+
+  /* ---------- weather ---------- */
+  // WMO code -> [icon, words]
+  function wmo(c){
+    if(c===0) return ['☀️','Clear'];
+    if(c===1) return ['\u{1F324}️','Mostly clear'];
+    if(c===2) return ['⛅','Partly cloudy'];
+    if(c===3) return ['☁️','Overcast'];
+    if(c===45||c===48) return ['\u{1F32B}️','Fog'];
+    if(c>=51&&c<=57) return ['\u{1F327}️','Drizzle'];
+    if(c>=61&&c<=67) return ['\u{1F327}️','Rain'];
+    if(c>=71&&c<=77) return ['\u{1F328}️','Snow'];
+    if(c>=80&&c<=82) return ['\u{1F326}️','Showers'];
+    if(c===85||c===86) return ['\u{1F328}️','Snow showers'];
+    if(c>=95) return ['⛈️','Thunderstorms'];
+    return ['☁️','Cloudy'];
+  }
+  // ten points down the route: [label, road-mile, lat, lon, IANA zone]
+  var WX=[
+    ['Geneva &mdash; leaving',   0,   41.896,-88.285,'America/Chicago'],
+    ['South Bend',             143,   41.679,-86.226,'America/New_York'],
+    ['Toledo',                 295,   41.552,-83.628,'America/New_York'],
+    ['Cleveland',              396,   41.310,-81.833,'America/New_York'],
+    ['Youngstown',             465,   41.095,-80.647,'America/New_York'],
+    ['DuBois',                 573,   41.120,-78.760,'America/New_York'],
+    ['Snow Shoe',              619,   41.030,-77.960,'America/New_York'],
+    ['Bloomsburg',             704,   41.000,-76.450,'America/New_York'],
+    ['the Water Gap',          782,   40.970,-75.130,'America/New_York'],
+    ['Port Washington',        875,   40.826,-73.698,'America/New_York']
+  ];
+  var depart=null;
+  try{ depart=localStorage.getItem('homeDepart')||null; }catch(e){}
+
+  function hoursFor(mileFrom,mileTo){
+    var d=Math.max(0,mileTo-mileFrom);
+    return d/PLAN_MPH + STOPHRS*(d/TOTAL);
+  }
+  // when will we be at each point?
+  function etaAt(mile){
+    var m=mileNow();
+    if(m!==null && m>0) return new Date(Date.now()+hoursFor(m,mile)*3600*1000);
+    var base=depart?centralToDate(depart):new Date();
+    if(isNaN(base.getTime())) base=new Date();
+    return new Date(base.getTime()+hoursFor(0,mile)*3600*1000);
+  }
+  function at(zone,d,opts){ opts=opts||{hour:'numeric'}; opts.timeZone=zone;
+    return d.toLocaleTimeString('en-US',opts); }
+
+  // how far ahead of UTC a zone is at a given instant
+  function tzOffset(zone,d){
+    var parts=new Intl.DateTimeFormat('en-US',{timeZone:zone,hour12:false,
+      year:'numeric',month:'2-digit',day:'2-digit',
+      hour:'2-digit',minute:'2-digit',second:'2-digit'}).formatToParts(d);
+    var g={}; parts.forEach(function(x){ g[x.type]=x.value; });
+    var asUTC=Date.UTC(+g.year,+g.month-1,+g.day,+(g.hour==='24'?0:g.hour),+g.minute,+g.second);
+    return asUTC-d.getTime();
+  }
+  // the departure box means Geneva time, whatever zone the phone has drifted into
+  function centralToDate(local){
+    var m=/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(local||'');
+    if(!m) return new Date();
+    var naive=Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5]);
+    var t=naive;
+    for(var i=0;i<2;i++) t=naive-tzOffset('America/Chicago',new Date(t));
+    return new Date(t);
+  }
+  function dayAt(zone,d){ return d.toLocaleDateString('en-US',{timeZone:zone,weekday:'short'}); }
+
+  function loadWx(){
+    var lat=WX.map(function(w){return w[2]}).join(',');
+    var lon=WX.map(function(w){return w[3]}).join(',');
+    var u='https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+
+      '&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m'+
+      '&hourly=temperature_2m,precipitation_probability,weather_code'+
+      '&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max'+
+      '&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=GMT&forecast_days=4';
+    fetch(u).then(function(r){ if(!r.ok) throw 0; return r.json(); })
+      .then(function(j){ wxData=Array.isArray(j)?j:[j]; wxErr=false; paintWx(); })
+      .catch(function(){ wxErr=true; paintWx(); });
+  }
+  function hourIndex(loc,when){
+    // hourly.time is UTC, "YYYY-MM-DDTHH:00" — -1 means past the forecast window
+    var target=when.toISOString().slice(0,13);
+    var t=loc.hourly.time;
+    for(var i=0;i<t.length;i++){ if(t[i].slice(0,13)===target) return i; }
+    return -1;
+  }
+  function paintWx(){
+    var now=document.getElementById('wxnow');
+    var route=document.getElementById('wxroute');
+    var depEl=document.getElementById('wxdep');
+    if(wxErr||!wxData){
+      now.innerHTML='<div class="wx"><div class="k">Weather</div>'+
+        '<div class="cond" style="margin-top:.3rem">'+(wxErr?'No signal for the forecast':'Loading…')+'</div>'+
+        '<div class="det">'+(wxErr?'It will fill in when you have bars again.':'')+'</div>'+
+        (wxErr?'<p class="src" style="margin:.5rem 0 0"><button id="wxretry">Try again</button></p>':'')+'</div>';
+      var b=document.getElementById('wxretry'); if(b) b.addEventListener('click',function(){wxErr=false;paintWx();loadWx();});
+      route.innerHTML=''; depEl.innerHTML='';
+      return;
+    }
+    var g=wxData[0], c=g.current, ic=wmo(c.weather_code);
+    now.innerHTML='<div class="wx"><div class="k">Right now in Geneva</div>'+
+      '<div class="row"><span class="ic">'+ic[0]+'</span>'+
+      '<span class="deg">'+Math.round(c.temperature_2m)+'&deg;</span>'+
+      '<span><span class="cond">'+ic[1]+'</span>'+
+      '<span class="det">Feels like '+Math.round(c.apparent_temperature)+'&deg; &middot; wind '+
+        Math.round(c.wind_speed_10m)+' mph</span></span></div>'+
+      '<div class="det" style="margin-top:.6rem">Today '+Math.round(g.daily.temperature_2m_max[0])+
+        '&deg; / '+Math.round(g.daily.temperature_2m_min[0])+'&deg;'+
+        ' &middot; rain '+(g.daily.precipitation_probability_max[0]||0)+'%'+
+        ' &middot; tomorrow '+Math.round(g.daily.temperature_2m_max[1])+'&deg; / '+
+        Math.round(g.daily.temperature_2m_min[1])+'&deg;</div></div>';
+
+    var tracking = mileNow()!==null && mileNow()>0;
+    if(!tracking && !depart) depart=defaultDepart();
+    depEl.innerHTML = tracking ? '' :
+      '<div class="dep"><label for="dep">Leaving Geneva &middot; Central</label>'+
+      '<input type="datetime-local" id="dep" value="'+(depart||defaultDepart())+'"></div>';
+    var di=document.getElementById('dep');
+    if(di) di.addEventListener('change',function(){
+      depart=di.value; try{localStorage.setItem('homeDepart',depart)}catch(e){} paintWx();
+    });
+
+    route.innerHTML='<div class="wxr">'+WX.map(function(w,i){
+      var loc=wxData[i]; if(!loc||!loc.hourly) return '';
+      var mNow=mileNow();
+      if(mNow!==null && mNow>0 && w[1] < mNow-10)
+        return '<div class="r past"><span class="e">&#10003;</span>'+
+          '<span class="pl"><b>'+w[0]+'</b><span>behind you</span></span>'+
+          '<span class="rn dry"></span><span class="t">&ndash;</span></div>';
+      var when=etaAt(w[1]);
+      var k=hourIndex(loc,when);
+      var last=i===WX.length-1;
+      var stamp=at(w[4],when,{hour:'numeric',minute:'2-digit'})+' '+dayAt(w[4],when);
+      if(k<0) return '<div class="r'+(last?' arr':'')+'">'+
+        '<span class="e">&mdash;</span>'+
+        '<span class="pl"><b>'+w[0]+'</b><span>'+stamp+' &middot; too far out to forecast</span></span>'+
+        '<span class="rn dry"></span><span class="t">&ndash;</span></div>';
+      var code=loc.hourly.weather_code[k], t=loc.hourly.temperature_2m[k];
+      var pr=loc.hourly.precipitation_probability[k];
+      var e=wmo(code);
+      return '<div class="r'+(last?' arr':'')+'">'+
+        '<span class="e">'+e[0]+'</span>'+
+        '<span class="pl"><b>'+w[0]+'</b><span>'+stamp+' &middot; '+e[1]+'</span></span>'+
+        '<span class="rn'+((pr||0)<20?' dry':'')+'">'+(pr||0)+'%</span>'+
+        '<span class="t">'+Math.round(t)+'&deg;</span></div>';
+    }).join('')+'</div>';
+  }
+  function defaultDepart(){
+    var d=new Date();
+    if(d.getHours()>=18) d=new Date(d.getTime()+24*3600*1000);
+    var z=function(n){return String(n).padStart(2,'0')};
+    return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate())+'T18:00';
+  }
+
   render();
   setInterval(render,20000);
   try{ if(localStorage.getItem('homeGPS')==='1') startGPS(); }catch(e){}
+  paintWx(); loadWx();
+  setInterval(loadWx,15*60*1000);
 })();
 </script>
 </body>
