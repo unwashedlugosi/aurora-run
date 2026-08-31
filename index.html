@@ -48,19 +48,19 @@
   a{color:var(--road)}
   a:focus-visible,button:focus-visible{outline:2px solid var(--chrome-hi);outline-offset:2px;border-radius:3px}
 
+  /* ---- chrome ---- */
   .board{background:var(--chrome);background-image:linear-gradient(160deg,var(--chrome) 0%,var(--chrome-2) 100%);
-    color:var(--chrome-ink);border-bottom:3px solid var(--chrome-hi);position:sticky;top:0;z-index:20}
-  .board{padding-top:env(safe-area-inset-top)}
+    color:var(--chrome-ink);border-bottom:3px solid var(--chrome-hi);position:sticky;top:0;z-index:20;
+    padding-top:env(safe-area-inset-top)}
   .board-top{max-width:720px;margin:0 auto;padding:.6rem 1rem .45rem;
     padding-left:max(1rem,env(safe-area-inset-left));padding-right:max(1rem,env(safe-area-inset-right));
     display:flex;align-items:center;gap:.6rem}
   .board-top .bt{flex:1;min-width:0}
-  .mark{width:42px;height:42px;border-radius:10px;flex-shrink:0;display:block;
-    box-shadow:0 1px 4px rgba(0,0,0,.45)}
-  .board h1{font-family:var(--f-d);font-weight:700;font-size:clamp(1.15rem,5.8vw,1.5rem);
-    letter-spacing:.02em;text-transform:uppercase;margin:0;line-height:1.02;white-space:nowrap}
+  .mark{width:42px;height:42px;border-radius:10px;flex-shrink:0;display:block;box-shadow:0 1px 4px rgba(0,0,0,.45)}
   .ttl{display:flex;align-items:center;gap:.5rem;min-width:0}
-  .ttl h1{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+  .ttl h1{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;
+    font-family:var(--f-d);font-weight:700;font-size:clamp(1.15rem,5.8vw,1.5rem);
+    letter-spacing:.02em;text-transform:uppercase;margin:0;line-height:1.02;white-space:nowrap}
   .sub{display:flex;align-items:baseline;gap:.5rem;margin-top:.12rem;min-width:0}
   .who{font-size:.82rem;color:var(--chrome-dim);margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .whn{font-family:var(--f-m);font-size:.74rem;color:var(--chrome-hi);white-space:nowrap;flex-shrink:0;margin-left:auto}
@@ -73,59 +73,70 @@
   .tabs::-webkit-scrollbar{display:none}
   .tab{appearance:none;background:none;border:none;border-bottom:3px solid transparent;margin-bottom:-3px;
     color:var(--chrome-dim);font-family:var(--f-d);font-weight:600;font-size:1.05rem;letter-spacing:.05em;
-    text-transform:uppercase;padding:.42rem .65rem .48rem;cursor:pointer;white-space:nowrap;flex-shrink:0}
+    text-transform:uppercase;padding:.45rem .7rem .5rem;white-space:nowrap;cursor:pointer}
   .tab[aria-selected="true"]{color:var(--chrome-hi);border-bottom-color:var(--chrome-hi)}
 
-  main{max-width:720px;margin:0 auto;padding:1.1rem 1rem 4rem}
-  .panel[hidden]{display:none} .panel{display:flex;flex-direction:column;gap:1.4rem}
-  .grp{display:flex;flex-direction:column;gap:.55rem}
-  h2{font-family:var(--f-d);text-transform:uppercase;letter-spacing:.05em;font-size:1.3rem;font-weight:700;
-    margin:0;padding-bottom:.3rem;border-bottom:2px solid var(--ink);text-wrap:balance}
-  .lede{font-size:.95rem;color:var(--muted);margin:-.15rem 0 .2rem}
+  main{max-width:720px;margin:0 auto;padding:1rem 1rem 4rem}
+  .grp{margin-bottom:1.5rem}
+  h2{font-family:var(--f-d);font-weight:700;font-size:1.35rem;letter-spacing:.03em;text-transform:uppercase;
+    margin:0 0 .55rem;padding-bottom:.3rem;border-bottom:2px solid var(--ink)}
+  .lede{margin:0 0 .8rem;color:var(--muted);font-size:1rem}
+  .card{background:var(--surface);border:1px solid var(--rule);border-radius:9px;padding:.85rem .95rem;
+    box-shadow:var(--shadow);margin-bottom:.7rem}
+  .card h3{margin:0 0 .3rem;font-size:1.12rem;font-weight:700}
+  .card p{margin:0 0 .5rem;font-size:1rem;color:var(--muted)}
+  .card p:last-child{margin-bottom:0}
+  .card ul{margin:.2rem 0 0;padding-left:1.1rem;color:var(--muted)}
+  .card li{margin-bottom:.3rem}
 
-  .eta{background:var(--chrome);background-image:linear-gradient(155deg,var(--chrome) 0%,var(--chrome-2) 100%);
-    border-radius:10px;padding:.9rem 1rem 1rem;box-shadow:var(--shadow)}
-  .eta .k{font-family:var(--f-d);font-size:.84rem;letter-spacing:.11em;text-transform:uppercase;color:var(--chrome-hi);font-weight:600}
-  .eta h2{font-family:var(--f-d);font-size:1.5rem;text-transform:uppercase;letter-spacing:.03em;
-    color:var(--chrome-ink);border:none;margin:.1rem 0 .7rem;padding:0}
-  .eta-sub{margin:-.15rem 0 .55rem;font-size:.92rem;color:var(--chrome-dim)}
-  .fine{font-size:.86rem;color:var(--faint);line-height:1.4}
-  .lnav{background:var(--chrome);color:var(--chrome-ink);border-radius:9px;
-    padding:.7rem .85rem;margin:0 0 .8rem;box-shadow:var(--shadow)}
-  .lnav .k{font-family:var(--f-d);font-size:.76rem;letter-spacing:.09em;text-transform:uppercase;
+  /* ---- the countdown ---- */
+  .hero{background:var(--chrome);background-image:linear-gradient(155deg,var(--chrome) 0%,var(--chrome-2) 100%);
+    color:var(--chrome-ink);border-radius:12px;padding:1.1rem 1rem 1.15rem;box-shadow:var(--shadow);margin-bottom:.9rem}
+  .hero .k{font-family:var(--f-d);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;
     color:var(--chrome-hi);font-weight:700}
-  .lnav .big{font-size:1.1rem;font-weight:700;line-height:1.25;margin:.12rem 0 .1rem;text-wrap:balance}
-  .lnav .sub{font-family:var(--f-m);font-size:.8rem;color:var(--chrome-dim)}
-  .lnav .bars{display:flex;gap:.22rem;margin-top:.55rem}
-  .lnav .bars i{flex:1;height:7px;border-radius:3px;background:rgba(255,255,255,.16)}
-  .lnav .bars i.done{background:var(--chrome-dim)}
-  .lnav .bars i.on{background:var(--chrome-hi);box-shadow:0 0 0 2px rgba(242,193,78,.25)}
-  .lnav .picks{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;margin-top:.65rem}
-  .pk{appearance:none;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);
-    color:var(--chrome-ink);border-radius:8px;padding:.5rem .25rem;cursor:pointer;
-    display:flex;flex-direction:column;align-items:center;gap:.12rem;line-height:1;
+  .hero .clock{font-family:var(--f-m);font-weight:600;font-variant-numeric:tabular-nums;
+    font-size:clamp(3.4rem,18vw,4.6rem);line-height:1;margin:.15rem 0 .05rem;letter-spacing:-.02em}
+  .hero .unit{font-family:var(--f-d);font-size:1rem;letter-spacing:.12em;text-transform:uppercase;color:var(--chrome-dim)}
+  .hero .arrive{font-size:1.25rem;font-weight:700;margin:.6rem 0 0;line-height:1.3}
+  .hero .arrive small{display:block;font-size:.86rem;font-weight:400;color:var(--chrome-dim);margin-top:.1rem}
+  .hero .bars{display:flex;gap:.22rem;margin:.85rem 0 .5rem}
+  .hero .bars i{flex:1;height:8px;border-radius:4px;background:rgba(255,255,255,.15)}
+  .hero .bars i.done{background:var(--chrome-dim)}
+  .hero .bars i.on{background:var(--chrome-hi);box-shadow:0 0 0 2px rgba(242,193,78,.25)}
+  .hero .where{font-size:1rem;color:var(--chrome-ink)}
+  .hero .where b{color:var(--chrome-hi)}
+  .hero .src{margin-top:.5rem;font-size:.8rem;color:var(--chrome-dim)}
+  .hero .src button{appearance:none;background:none;border:none;padding:0;color:var(--chrome-hi);
+    font:inherit;text-decoration:underline;cursor:pointer}
+
+  .start{appearance:none;display:block;width:100%;background:var(--chrome-hi);color:var(--chrome);
+    border:none;border-radius:10px;font-family:var(--f-d);font-weight:700;font-size:1.35rem;
+    letter-spacing:.06em;text-transform:uppercase;padding:.9rem 1rem;cursor:pointer;margin-top:.9rem;
     -webkit-tap-highlight-color:transparent}
-  .pk b{font-family:var(--f-d);font-size:1.3rem;font-weight:700}
-  .pk span{font-family:var(--f-d);font-size:.72rem;letter-spacing:.05em;
-    text-transform:uppercase;color:var(--chrome-dim)}
+  .picks{display:grid;grid-template-columns:repeat(4,1fr);gap:.35rem;margin-top:.6rem}
+  .pk{appearance:none;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);
+    color:var(--chrome-ink);border-radius:8px;padding:.45rem .2rem;cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;gap:.1rem;line-height:1;
+    -webkit-tap-highlight-color:transparent}
+  .pk b{font-family:var(--f-d);font-size:1.15rem;font-weight:700}
+  .pk span{font-family:var(--f-d);font-size:.64rem;letter-spacing:.04em;text-transform:uppercase;color:var(--chrome-dim)}
   .pk.on{background:var(--chrome-hi);border-color:var(--chrome-hi);color:var(--chrome)}
   .pk.on span{color:var(--chrome)}
-  .lnav .foot{margin-top:.6rem;font-size:.82rem;color:var(--chrome-dim);line-height:1.45}
-  .lnk{appearance:none;background:none;border:none;padding:0;color:var(--chrome-hi);
-    font:inherit;text-decoration:underline;cursor:pointer}
-  .eta-grid{display:flex;gap:.6rem}
-  .eta-cell{flex:1;background:rgba(255,255,255,.06);border-radius:8px;padding:.55rem .5rem;text-align:center}
-  .eta-cell .n{font-family:var(--f-m);font-weight:600;font-size:1.4rem;color:var(--chrome-ink);font-variant-numeric:tabular-nums}
-  .eta-cell .l{font-family:var(--f-d);font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;color:var(--chrome-dim)}
-  .go-row{display:flex;gap:.5rem;margin-top:.85rem}
-  .go-row a{flex:1;text-align:center;background:var(--chrome-hi);color:var(--chrome);font-family:var(--f-d);
-    font-weight:700;font-size:1rem;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;
-    padding:.6rem .5rem;border-radius:7px}
-  .go-row a.ghost{background:transparent;border:1px solid var(--chrome-dim);color:var(--chrome-ink)}
-  .eta-note{margin:.65rem 0 0;font-size:.84rem;color:var(--chrome-dim);line-height:1.45}
 
+  .tiles{display:flex;gap:.6rem;margin-bottom:.9rem}
+  .tile{flex:1;background:var(--surface);border:1px solid var(--rule);border-radius:9px;
+    padding:.6rem .5rem;text-align:center;box-shadow:var(--shadow)}
+  .tile .n{font-family:var(--f-m);font-weight:600;font-size:1.35rem;font-variant-numeric:tabular-nums}
+  .tile .l{font-family:var(--f-d);font-size:.74rem;letter-spacing:.07em;text-transform:uppercase;color:var(--faint)}
+
+  .go-row{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.2rem}
+  .go-row a{flex:1;min-width:44%;text-align:center;background:var(--road);color:#fff;text-decoration:none;
+    font-family:var(--f-d);font-weight:700;font-size:1rem;letter-spacing:.04em;text-transform:uppercase;
+    border-radius:8px;padding:.6rem .5rem}
+
+  /* ---- legs ---- */
   .leg{background:var(--surface);border:1px solid var(--rule);border-radius:9px;padding:.8rem .9rem;
-    box-shadow:var(--shadow);display:flex;gap:.75rem}
+    box-shadow:var(--shadow);display:flex;gap:.75rem;margin-bottom:.7rem;transition:opacity .25s}
   .leg .num{font-family:var(--f-d);font-weight:700;font-size:1.5rem;color:var(--road);min-width:26px;
     line-height:1;padding-top:.1rem;flex-shrink:0}
   .leg .body{flex:1;min-width:0}
@@ -133,95 +144,41 @@
   .leg .meta{font-family:var(--f-m);font-size:.8rem;color:var(--faint);margin-bottom:.35rem}
   .leg p{margin:0 0 .5rem;font-size:1rem;color:var(--muted)}
   .leg p:last-child{margin-bottom:0}
-  .leg a.go{display:inline-block;margin-top:.3rem;font-family:var(--f-m);font-size:.82rem;
-    color:var(--road);text-decoration:none;font-weight:600}
-
-  .leg{transition:opacity .25s}
   .leg.done{opacity:.4}
-  .leg.here{border-color:var(--chrome-hi);border-left:5px solid var(--chrome-hi);
-    padding-left:.55rem;box-shadow:0 0 0 3px rgba(242,193,78,.16),var(--shadow)}
+  .leg.here{border-color:var(--chrome-hi);border-left:5px solid var(--chrome-hi);padding-left:.55rem;
+    box-shadow:0 0 0 3px rgba(242,193,78,.16),var(--shadow)}
   .leg.here .num{color:var(--chrome-hi)}
-  .leg .num .car{display:block;font-size:1.45rem;line-height:.8;color:var(--chrome-hi);
-    margin:-.15rem 0 .05rem;animation:carp 1.9s ease-in-out infinite}
-  @keyframes carp{0%,100%{transform:translateX(0);opacity:1}50%{transform:translateX(3px);opacity:.55}}
-  @media (prefers-reduced-motion:reduce){ .leg .num .car{animation:none} }
-  .legnow{font-family:var(--f-d);font-size:.78rem;font-weight:700;letter-spacing:.08em;
-    text-transform:uppercase;background:var(--chrome-hi);color:var(--chrome);
-    padding:.08rem .4rem;border-radius:4px;margin-left:.4rem;vertical-align:2px;display:inline-block}
+  .leg .num .car{display:block;font-size:1.45rem;line-height:.8;color:var(--chrome-hi);margin:-.15rem 0 .05rem}
+  .legnow{font-family:var(--f-d);font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    background:var(--chrome-hi);color:var(--chrome);padding:.08rem .4rem;border-radius:4px;
+    margin-left:.4rem;vertical-align:2px;display:inline-block}
 
   .stop{background:var(--surface);border:1px solid var(--rule);border-left:4px solid var(--sign);
-    border-radius:9px;padding:.8rem .95rem;box-shadow:var(--shadow)}
+    border-radius:9px;padding:.8rem .95rem;box-shadow:var(--shadow);margin-bottom:.7rem;transition:opacity .25s}
+  .stop.last{border-left-color:var(--clay)}
+  .stop.done{opacity:.4}
   .stop h3{margin:0 0 .15rem;font-size:1.12rem;font-weight:700}
   .stop .meta{font-family:var(--f-m);font-size:.8rem;color:var(--faint);margin-bottom:.35rem}
   .stop p{margin:0 0 .5rem;font-size:1rem;color:var(--muted)}
-  .stop a{color:var(--road);font-weight:600;text-decoration:none}
-  .chips{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.5rem}
-  .chip{font-family:var(--f-d);font-size:.82rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
-    padding:.1rem .45rem;border-radius:4px;background:var(--surface-alt);color:var(--muted)}
-  .chip.eat{background:var(--sign);color:#fff}
-  .chip.hot{background:var(--chrome-hi);color:var(--chrome)}
+  .stop p:last-child{margin-bottom:0}
+  .stop a{font-family:var(--f-m);font-size:.82rem;font-weight:600;text-decoration:none}
 
-  .mile{display:flex;gap:.8rem;padding:.1rem 0}
-  .mile .when{font-family:var(--f-m);font-size:.86rem;font-weight:600;color:var(--road);
-    min-width:52px;flex-shrink:0;padding-top:.95rem;font-variant-numeric:tabular-nums}
-  .mile .what{flex:1;min-width:0;background:var(--surface);border:1px solid var(--rule);
-    border-radius:9px;padding:.75rem .9rem;box-shadow:var(--shadow);margin-bottom:.55rem}
-  .mile h3{margin:0 0 .25rem;font-size:1.12rem;font-weight:700;text-wrap:balance}
-  .mile .where{font-family:var(--f-m);font-size:.78rem;color:var(--faint);
-    text-transform:uppercase;letter-spacing:.04em;margin-bottom:.35rem}
-  .mile p{margin:0 0 .5rem;font-size:1rem;color:var(--muted)}
-  .mile p:last-child{margin-bottom:0}
-  .mile strong{color:var(--ink)}
-  .mile.big .what{border-left:4px solid var(--chrome-hi)}
-  .mile.zone .what{border-left:4px solid var(--clay);background:var(--clay-bg)}
-  .mile.passed{opacity:.34}
-  .mile.here .what{border:2px solid var(--chrome-hi);box-shadow:0 0 0 4px rgba(242,193,78,.18)}
-  .mile.here .when{color:var(--chrome-hi)}
-  .nowtag{display:inline-block;font-family:var(--f-d);font-size:.78rem;font-weight:700;
-    letter-spacing:.08em;text-transform:uppercase;background:var(--chrome-hi);color:var(--chrome);
-    padding:.08rem .4rem;border-radius:4px;margin-left:.4rem;vertical-align:2px}
-  .stop.passed{opacity:.34}
-
-  .gps{background:var(--surface);border:1px solid var(--rule);border-left:4px solid var(--road);
-    border-radius:9px;padding:.75rem .9rem;box-shadow:var(--shadow)}
-  .gps .st{font-family:var(--f-d);font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);font-weight:600}
-  .gps .big{font-size:1.15rem;font-weight:700;margin:.15rem 0 .1rem;color:var(--ink)}
-  .gps .sub{font-size:.92rem;color:var(--muted)}
-  .gps button{appearance:none;margin-top:.5rem;background:var(--road);color:#fff;border:none;
-    font-family:var(--f-d);font-weight:700;font-size:.95rem;letter-spacing:.05em;text-transform:uppercase;
-    padding:.5rem .9rem;border-radius:7px;cursor:pointer}
-
-  .card{background:var(--surface);border:1px solid var(--rule);border-radius:9px;padding:.8rem .95rem;box-shadow:var(--shadow)}
-  .card h3{margin:0 0 .35rem;font-size:1.12rem;font-weight:700}
-  .card p{margin:0 0 .55rem;font-size:1rem;color:var(--muted)} .card p:last-child{margin-bottom:0}
-  .card ul{margin:.2rem 0 0;padding:0;list-style:none}
-  .card li{font-size:1rem;color:var(--muted);padding:.16rem 0 .16rem 1em;position:relative}
-  .card li::before{content:"▸";color:var(--road);position:absolute;left:0}
-  .card strong{color:var(--ink)}
-  .dl>div{display:flex;gap:.7rem;padding:.38rem 0;font-size:.98rem;border-bottom:1px solid var(--rule)}
+  .alert{background:var(--clay-bg);border-left:4px solid var(--clay);border-radius:8px;
+    padding:.75rem .9rem;font-size:.96rem;color:var(--ink)}
+  .dl{margin:0}
+  .dl>div{display:flex;gap:.8rem;padding:.5rem 0;border-bottom:1px solid var(--rule)}
   .dl>div:last-child{border-bottom:none}
-  .dl dt{color:var(--faint);min-width:104px;flex-shrink:0;margin:0;font-size:.92rem}
-  .dl dd{margin:0;color:var(--ink);font-weight:600}
-  .dl dd a{color:var(--road);text-decoration:none}
-  .mono{font-family:var(--f-m);font-variant-numeric:tabular-nums}
-
-  .alert{background:var(--clay-bg);border:1px solid color-mix(in srgb,var(--clay) 30%,transparent);
-    border-left:4px solid var(--clay);border-radius:7px;padding:.8rem .9rem;font-size:1rem;color:var(--ink)}
-  .alert b{color:var(--clay)}
-  footer{max-width:720px;margin:0 auto;padding:1.5rem 1rem 2.5rem;font-family:var(--f-m);
-    font-size:.78rem;color:var(--faint);text-align:center;line-height:1.7}
-  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  .dl dt{font-family:var(--f-d);font-size:.86rem;letter-spacing:.05em;text-transform:uppercase;
+    color:var(--faint);min-width:88px;flex-shrink:0;margin:0}
+  .dl dd{margin:0;flex:1}
+  .fine{font-size:.86rem;color:var(--faint);line-height:1.4;display:block}
+  .mono{font-family:var(--f-m);font-size:.9rem}
 
   @media (max-width:560px){
     main{padding:.9rem .6rem 4rem}
-    .board-top{padding:.6rem .6rem .45rem}
-    .tabs{padding:0 .3rem}
-    /* time label sits above the card so the text gets the full screen */
-    .mile{display:block;padding:0}
-    .mile .when{display:block;min-width:0;padding:0 0 .2rem .15rem;font-size:.9rem}
-    .mile .what{margin-bottom:.75rem}
-    .leg{padding:.8rem .75rem}
-    .leg .num{min-width:20px;font-size:1.35rem}
+    .leg{padding:.8rem .7rem}
+    .leg.here{padding-left:.45rem}
+    .go-row a{min-width:100%}
   }
 </style>
 </head>
@@ -230,504 +187,220 @@
   <div class="board-top">
     <img class="mark" src="data:image/png;base64,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" alt="" width="42" height="42" decoding="async">
     <div class="bt">
-    <div class="ttl">
-      <h1>Aurora Run</h1>
-      <span class="txt"><button class="sml" id="tdn" aria-label="Smaller text">A</button><button class="big" id="tup" aria-label="Bigger text">A</button></span>
-    </div>
-    <div class="sub">
-      <p class="who">Russellton &rarr; Aurora IL</p>
-      <span class="whn" id="hdr">~575 MI &middot; ~9H10</span>
-    </div>
+      <div class="ttl">
+        <h1>The Drive Home</h1>
+        <span class="txt"><button class="sml" id="tdn" aria-label="Smaller text">A</button><button class="big" id="tup" aria-label="Bigger text">A</button></span>
+      </div>
+      <div class="sub">
+        <p class="who">Geneva IL &rarr; Port Washington</p>
+        <span class="whn" id="hdr">~875 MI</span>
+      </div>
     </div>
   </div>
   <nav class="tabs" role="tablist">
-    <button class="tab" role="tab" data-p="drive" aria-selected="true">The Drive</button>
-    <button class="tab" role="tab" data-p="passing" aria-selected="false">Passing</button>
+    <button class="tab" role="tab" data-p="now" aria-selected="true">How Long</button>
+    <button class="tab" role="tab" data-p="route" aria-selected="false">Route</button>
     <button class="tab" role="tab" data-p="stops" aria-selected="false">Stops</button>
-    <button class="tab" role="tab" data-p="there" aria-selected="false">Aurora</button>
-    <button class="tab" role="tab" data-p="back" aria-selected="false">Home</button>
+    <button class="tab" role="tab" data-p="info" aria-selected="false">Info</button>
   </nav>
 </header>
 
 <main>
 
-<section class="panel" id="p-drive" role="tabpanel">
-  <div id="legnav"></div>
-  <div id="eta"></div>
-
-  <div class="grp">
-    <div class="alert">
-      <b>You gain an hour.</b> Pennsylvania and Ohio are Eastern; Indiana&rsquo;s toll-road corridor and Illinois are Central. Your phone flips somewhere around the Indiana line. Every clock time below is <b>local to where you&rsquo;ll be</b>.
-    </div>
-  </div>
-
-  <div class="grp">
-    <h2>The Route</h2>
-    <p class="lede">You already know the first hour &mdash; it&rsquo;s how you came in, just turned the other way.</p>
-
-    <div class="leg">
-      <span class="num">1</span>
-      <div class="body">
-        <h3>PA-28 north to I-80</h3>
-        <div class="meta">~68 MI &middot; ~1H20 &middot; EASTERN</div>
-        <p>Out of Russellton the way you arrived, up the Allegheny valley. PA-28 meets I-80 at Brookville, which is <strong>forty miles east of Russellton</strong> &mdash; you drive an hour to start out further from Chicago, then turn west. No Pittsburgh, no turnpike, no tolls yet.</p>
-      </div>
-    </div>
-
-    <div class="leg">
-      <span class="num">2</span>
-      <div class="body">
-        <h3>I-80 west across Pennsylvania into Ohio</h3>
-        <div class="meta">~80 MI &middot; ~1H15 &middot; EASTERN</div>
-        <p>Clarion, Mercer, then the Ohio line. At the border I-80 becomes the <strong>Ohio Turnpike</strong> &mdash; grab the ticket, pay at the far end.</p>
-      </div>
-    </div>
-
-    <div class="leg">
-      <span class="num">3</span>
-      <div class="body">
-        <h3>Ohio Turnpike, end to end</h3>
-        <div class="meta">~240 MI &middot; ~3H40 &middot; EASTERN</div>
-        <p>The long flat middle: Youngstown, south of Cleveland, Sandusky, Toledo, and on to the Indiana line. Service plazas every 30&ndash;40 miles with gas and bathrooms, so fuel is never a problem &mdash; the food on the mainline is the problem, which is what the Stops tab is for.</p>
-      </div>
-    </div>
-
-    <div class="leg">
-      <span class="num">4</span>
-      <div class="body">
-        <h3>Indiana Toll Road &mdash; and the time change</h3>
-        <div class="meta">~136 MI &middot; ~2H05 &middot; ET &rarr; CT</div>
-        <p>I-80/90 past Elkhart and South Bend. <strong>You pick up an hour here.</strong> Gary and the industrial stretch at the end is the ugliest and slowest part of the day.</p>
-      </div>
-    </div>
-
-    <div class="leg">
-      <span class="num">5</span>
-      <div class="body">
-        <h3>I-80 west, then I-355 north, then I-88 west</h3>
-        <div class="meta">~50 MI &middot; ~1 HR &middot; CENTRAL</div>
-        <p>Stay on <strong>I-80</strong> rather than following I-90 toward Chicago &mdash; you want to go around the bottom, not through. Then <strong>I-355 north</strong> to <strong>I-88 west</strong>, and off at Eola Road or Route 59.</p>
-        <p style="color:var(--faint);font-size:.8rem">Skirting the city this way trades a few miles for missing Chicago traffic entirely. Worth it on a Sunday evening.</p>
-      </div>
-    </div>
-
-    <div class="leg">
-      <span class="num">6</span>
-      <div class="body">
-        <h3>2806 Packford Lane, Aurora IL</h3>
-        <div class="meta">ARRIVE</div>
-        <p>East side of Aurora, just off I-88 near Eola Road.</p>
-        <a class="go" target="_blank" href="https://maps.apple.com/?address=2806+Packford+Lane,+Aurora,+IL+60502">Directions &rarr;</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="grp">
-    <h2>One Tap</h2>
-    <div class="card">
-      <p>Set the whole thing going in Apple Maps, then use the Stops tab as you get near each one.</p>
-      <div class="go-row">
-        <a href="https://maps.apple.com/?daddr=2806+Packford+Lane,+Aurora,+IL+60502&dirflg=d" target="_blank">Navigate to Aurora &rarr;</a>
-      </div>
-    </div>
+<section class="panel" id="p-now" role="tabpanel">
+  <div id="hero"></div>
+  <div class="tiles" id="tiles"></div>
+  <div class="go-row">
+    <a href="https://maps.apple.com/?daddr=Port+Washington,+NY&dirflg=d" target="_blank">Navigate home &rarr;</a>
   </div>
 </section>
 
-<section class="panel" id="p-passing" role="tabpanel" hidden>
-  <div class="grp"><div id="gps"></div></div>
+<section class="panel" id="p-route" role="tabpanel" hidden>
   <div class="grp">
     <div class="alert">
-      Ordered by when you&rsquo;ll hit it, timed off a <b>2:00 PM Eastern</b> departure. Nothing here needs a stop &mdash; it&rsquo;s all out the window or just over the horizon.
+      <b>You lose the hour back.</b> Northwest Indiana is on Central time like Chicago. The clock jumps forward
+      about forty miles past the state line, near LaPorte &mdash; not at the border. Everything below is Eastern
+      from that point on.
     </div>
   </div>
-
   <div class="grp">
-    <h2>Pennsylvania</h2>
-
-    <div class="mile">
-      <span class="when">0:20</span>
-      <div class="what">
-        <h3>Ford City &mdash; the town that made plate glass</h3>
-        <div class="where">Along the river</div>
-        <p>Named for John B. Ford, who built the plate-glass works here. The company he helped start became <strong>PPG</strong>. For a long stretch, a serious share of America&rsquo;s window glass came out of this valley.</p>
-      </div>
-    </div>
-
-    <div class="mile">
-      <span class="when">0:30</span>
-      <div class="what">
-        <h3>Kittanning and the Allegheny</h3>
-        <div class="where">PA-28 north &middot; out the left window</div>
-        <p>You&rsquo;re driving up one of the old highways of North America. Kittanning was a major Lenape town, and the <strong>Kittanning Path</strong> over the mountains was the main east-west trail through Pennsylvania long before any road existed. The river beside you is still run by a chain of locks and dams from the barge era.</p>
-      </div>
-    </div>
-
-    <div class="mile">
-      <span class="when">1:10</span>
-      <div class="what">
-        <h3>Punxsutawney, off to the south</h3>
-        <div class="where">Behind you now</div>
-        <p>Phil&rsquo;s town, about 25 miles south of the highway. You passed the same junction coming in on Thursday.</p>
-      </div>
-    </div>
-
-    <div class="mile">
-      <span class="when">1:25</span>
-      <div class="what">
-        <h3>Where the oil industry started</h3>
-        <div class="where">40 miles north &middot; Titusville</div>
-        <p>You&rsquo;re skirting the bottom of the world&rsquo;s first oil region. In <strong>1859</strong>, Edwin Drake drilled the first commercially successful oil well near Titusville, and the global petroleum industry started in these hills. The boomtowns are mostly gone; some are literally ghost towns now.</p>
-      </div>
-    </div>
-
-    <div class="mile big">
-      <span class="when">1:40</span>
-      <div class="what">
-        <h3>The Emlenton bridge</h3>
-        <div class="where">I-80 west &middot; you drive over it</div>
-        <p>I-80 crosses the Allegheny here on one of the highest bridges on the whole interstate &mdash; the town of Emlenton sits in the gorge <em>underneath</em> you. Blink and it&rsquo;s over, but look down and you&rsquo;ll see rooftops.</p>
-      </div>
-    </div>
-
-    <div class="mile zone">
-      <span class="when">2:20</span>
-      <div class="what">
-        <h3>Ohio line &mdash; the turnpike starts</h3>
-        <div class="where">Take a ticket</div>
-        <p>I-80 becomes the Ohio Turnpike. You pay at the far end, so hang on to it.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="grp">
-    <h2>Ohio</h2>
-
-    <div class="mile big">
-      <span class="when">2:35</span>
-      <div class="what">
-        <h3>Youngstown &mdash; and Black Monday</h3>
-        <div class="where">South of the road</div>
-        <p>Steel town. On <strong>19 September 1977</strong> &mdash; still called Black Monday here &mdash; Youngstown Sheet &amp; Tube announced closures that ended about <strong>5,000 jobs in a single day</strong>. The city lost more than half its population over the following decades. Springsteen wrote a song called &ldquo;Youngstown&rdquo; about exactly this.</p>
-        <p>The valley you&rsquo;re crossing is the reason the phrase &ldquo;Rust Belt&rdquo; exists.</p>
-      </div>
-    </div>
-
-    <div class="mile">
-      <span class="when">2:45</span>
-      <div class="what">
-        <h3>Warren &mdash; where Packard came from</h3>
-        <div class="where">Just north</div>
-        <p>James Ward Packard built his first car here in <strong>1899</strong>, reportedly after being unimpressed with a Winton he&rsquo;d bought and being told by Mr Winton that if he thought he could do better he should go build his own. He did.</p>
-      </div>
-    </div>
-
-    <div class="mile">
-      <span class="when">3:15</span>
-      <div class="what">
-        <h3>Akron, and a river that caught fire</h3>
-        <div class="where">South &middot; Cuyahoga valley</div>
-        <p>Akron was the <strong>rubber capital of the world</strong> &mdash; Goodyear, Firestone, and the tyres on most American cars for most of a century. Alcoholics Anonymous was founded there in 1935.</p>
-        <p>And the Cuyahoga River, which you cross, was so polluted it <strong>caught fire</strong> &mdash; most famously in 1969. That fire helped push through the Clean Water Act and the creation of the EPA. The river is clean enough for fish now.</p>
-      </div>
-    </div>
-
-    <div class="mile">
-      <span class="when">4:00</span>
-      <div class="what">
-        <h3>Lake Erie, and a teenage commodore</h3>
-        <div class="where">North &middot; Sandusky</div>
-        <p>Cedar Point is out on its peninsula north of you &mdash; more roller coasters than almost anywhere on earth. Further out on the lake, in <strong>1813</strong>, Oliver Hazard Perry beat a British squadron and sent the line every kid should get to say out loud: <em>&ldquo;We have met the enemy and they are ours.&rdquo;</em> He was 27.</p>
-      </div>
-    </div>
-
-    <div class="mile big">
-      <span class="when">4:30</span>
-      <div class="what">
-        <h3>The Great Black Swamp</h3>
-        <div class="where">You are driving across the bottom of it</div>
-        <p>This is the best answer to &ldquo;why is it suddenly so <em>flat</em>.&rdquo; Northwest Ohio was a <strong>swamp the size of Connecticut</strong> &mdash; roughly 1,500 square miles of standing water and hardwood forest, left behind by a glacial lake. It was close to impassable. Settlers went around it for decades; it&rsquo;s why this corner of Ohio was settled so much later than the rest.</p>
-        <p>It was drained in the 1800s with ditches and clay tile, and the swamp floor turned out to be some of the richest farmland in the country. Every flat black field you can see was underwater.</p>
-      </div>
-    </div>
-
-    <div class="mile">
-      <span class="when">4:45</span>
-      <div class="what">
-        <h3>Toledo &mdash; and the war over it</h3>
-        <div class="where">Around you</div>
-        <p>Glass city: Libbey and Owens made Toledo the centre of American glassmaking, and Jeep has been built here since the war.</p>
-        <p>Better story: in <strong>1835 Ohio and Michigan nearly fought a war over this spot.</strong> Both claimed the Toledo Strip, both sent militia, and there was a lot of marching and almost no shooting. Congress settled it &mdash; Ohio kept Toledo, and Michigan was handed the <strong>Upper Peninsula</strong> as a consolation prize. Michigan thought it had been robbed. Then they found iron and copper up there.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="grp">
-    <h2>Indiana</h2>
-
-    <div class="mile zone">
-      <span class="when">5:15</span>
-      <div class="what">
-        <h3>You just gained an hour</h3>
-        <div class="where">Eastern &rarr; Central</div>
-        <p>Phones will flip on their own. Indiana&rsquo;s time-zone map is genuinely strange &mdash; the northwest corner runs on Chicago time, most of the state runs on New York time, and for years much of it refused to observe daylight saving at all.</p>
-      </div>
-    </div>
-
-    <div class="mile">
-      <span class="when">5:30</span>
-      <div class="what">
-        <h3>Elkhart makes almost every RV in America</h3>
-        <div class="where">Right along the toll road</div>
-        <p>Somewhere around <strong>four-fifths of the RVs in the United States</strong> are built within a few miles of here. Watch the shoulder &mdash; you&rsquo;ll start seeing brand-new ones being driven out in convoys. The town was also a band-instrument capital; a lot of school trumpets came from Elkhart.</p>
-      </div>
-    </div>
-
-    <div class="mile">
-      <span class="when">5:45</span>
-      <div class="what">
-        <h3>South Bend &mdash; Notre Dame and Studebaker</h3>
-        <div class="where">South of the road</div>
-        <p>The Golden Dome and the stadium are a couple of miles off the highway. <strong>Studebaker</strong> built wagons and then cars here for over a century &mdash; they made wagons for the Union Army before they ever made an automobile &mdash; until the plant closed in 1963 and took the city&rsquo;s economy with it.</p>
-      </div>
-    </div>
-
-    <div class="mile">
-      <span class="when">6:15</span>
-      <div class="what">
-        <h3>Sand dunes, in between the mills</h3>
-        <div class="where">North &middot; Lake Michigan</div>
-        <p><strong>Indiana Dunes</strong> became a national park in 2019 &mdash; big Lake Michigan dunes wedged directly between steel mills and refineries. One of the odder juxtapositions in the park system, and one of the most biodiverse places in the Midwest.</p>
-      </div>
-    <div class="mile big">
-      <span class="when">6:30</span>
-      <div class="what">
-        <h3>Gary, and the biggest steel mill in the country</h3>
-        <div class="where">Both sides &middot; unmistakable</div>
-        <p>The industrial skyline coming up is <strong>Gary Works</strong> &mdash; built by US Steel starting in 1906, on empty dunes, with a whole city laid out around it and named after the company&rsquo;s chairman. At its peak it was the largest steel mill on earth. It still runs.</p>
-        <p>Gary is also where the <strong>Jackson family</strong> lived; Michael was born there in 1958, in a two-bedroom house.</p>
-      </div>
-    </div>
-
-    </div>
-  </div>
-
-  <div class="grp">
-    <h2>Illinois</h2>
-
-    <div class="mile">
-      <span class="when">7:00</span>
-      <div class="what">
-        <h3>I-88 is the Ronald Reagan Memorial Tollway</h3>
-        <div class="where">The last leg</div>
-        <p>Named for him because he grew up out this way &mdash; born in Tampico, raised in Dixon, both further west along this same road.</p>
-      </div>
-    </div>
-
-    <div class="mile big">
-      <span class="when">7:20</span>
-      <div class="what">
-        <h3>Fermilab &mdash; and its bison</h3>
-        <div class="where">Batavia &middot; minutes from the house</div>
-        <p>America&rsquo;s great particle-physics lab is right next door to where you&rsquo;re sleeping. The <strong>top quark was discovered here</strong> in 1995. From the road you can see Wilson Hall rising out of the prairie like something that landed.</p>
-        <p>And there is a <strong>herd of American bison living on the site</strong>, kept there since <strong>1969</strong> &mdash; the founding director started it as a link to the prairie the lab was built on. You can drive in and look at them, free. That is a genuinely great thing to do with a five-year-old tomorrow.</p>
-      </div>
-    </div>
-
-    <div class="mile big">
-      <span class="when">7:30</span>
-      <div class="what">
-        <h3>Aurora, the City of Lights</h3>
-        <div class="where">Arrive</div>
-        <p>On <strong>8 November 1881</strong>, Aurora switched on sixteen electric arc lamps mounted on seven towers <strong>150 feet tall</strong> &mdash; enough, in theory, to light the entire city electrically, when most of America was still on gas. It took the nickname &ldquo;City of Lights&rdquo; officially in 1908.</p>
-        <p>Also, and Max may care more about this: <strong>Wayne&rsquo;s World is set in Aurora.</strong> Party on.</p>
-      </div>
-    </div>
+    <h2>The Route</h2>
+    <p class="lede">I-80 the whole way once you&rsquo;re past Chicago. Seven pieces, and the fifth one is most of the night.</p>
+    <div id="legs"></div>
   </div>
 </section>
 
 <section class="panel" id="p-stops" role="tabpanel" hidden>
   <div class="grp">
-    <div class="alert">
-      <b>Correction from the first version:</b> I had the first stop at Austintown, about two hours in. Wrong &mdash; <b>there is no Culver&rsquo;s in Austintown, or anywhere in the Youngstown area, or anywhere in Pennsylvania at all.</b> Checked against Culver&rsquo;s own sitemap: 1,117 locations, zero in PA. Everything below is off that list.
-    </div>
+    <h2>Culver&rsquo;s, While You Can</h2>
+    <p class="lede">Checked against Culver&rsquo;s own location list: there are <strong>none in Pennsylvania, New Jersey, or New York</strong>. Ohio is the end of the line.</p>
+    <div id="stops"></div>
   </div>
-
   <div class="grp">
-    <h2>The First One Is 3+ Hours Out</h2>
+    <h2>The Overnight Problem</h2>
     <div class="card">
-      <p>Nothing in Pennsylvania. Nothing in the Youngstown valley. The first Culver&rsquo;s on your route is on the <strong>south ring of Cleveland, roughly 200 miles and 3 hours 15 in</strong>.</p>
-      <p><strong>Plan the first two hours around that.</strong> If the boys are hungry before Ohio, it&rsquo;s a turnpike plaza or nothing.</p>
+      <h3>Ohio and Indiana are easy</h3>
+      <p>Both toll roads have service plazas on the mainline every 30&ndash;40 miles, and the fuel and bathrooms
+      are open <strong>all night</strong>. You never have to leave the road. Hot food shrinks to one counter
+      after midnight, but coffee is always there.</p>
     </div>
-  </div>
-
-  <div class="grp">
-    <h2>Culver&rsquo;s, In Order</h2>
-
-    <div class="stop">
-      <h3>1 &middot; Strongsville, OH &mdash; Pearl Rd</h3>
-      <div class="meta">~200 MI &middot; ~3H15 &middot; SOUTH RING OF CLEVELAND &middot; EASTERN</div>
-      <p>The first one you can reach. Off the turnpike near the I-71 interchange. On a 2:00 departure this is about <strong>5:15 PM</strong> &mdash; a sensible dinner.</p>
-      <p style="color:var(--faint);font-size:.8rem">Brunswick (Center Rd) and Medina (Medina Rd) are nearby alternatives if traffic favours one.</p>
-      <a target="_blank" href="https://maps.apple.com/?q=Culvers+Pearl+Rd+Strongsville+OH">Find it &rarr;</a>
-      <div class="chips"><span class="chip eat">Culver&rsquo;s</span><span class="chip hot">First possible</span></div>
-    </div>
-
-    <div class="stop">
-      <h3>2 &middot; Sandusky, OH &mdash; Milan Rd</h3>
-      <div class="meta">~245 MI &middot; ~3H50 &middot; RIGHT OFF THE TURNPIKE &middot; EASTERN</div>
-      <p>The cleanest turnpike-adjacent stop of the whole drive &mdash; Milan Road is the US-250 exit, straight off and straight back on. About <strong>5:50 PM</strong>. Cedar Point is up the road from here.</p>
-      <a target="_blank" href="https://maps.apple.com/?q=Culvers+Milan+Rd+Sandusky+OH">Find it &rarr;</a>
-      <div class="chips"><span class="chip eat">Culver&rsquo;s</span><span class="chip hot">Easiest on/off</span></div>
-    </div>
-
-    <div class="stop">
-      <h3>3 &middot; Perrysburg, OH &mdash; Fremont Pike</h3>
-      <div class="meta">~305 MI &middot; ~4H45 &middot; TOLEDO &middot; EASTERN</div>
-      <p>Last one before the time change. About <strong>6:45 PM</strong>. Holland and Oregon have branches too if this one is awkward.</p>
-      <a target="_blank" href="https://maps.apple.com/?q=Culvers+Fremont+Pike+Perrysburg+OH">Find it &rarr;</a>
-      <div class="chips"><span class="chip eat">Culver&rsquo;s</span></div>
-    </div>
-
-    <div class="stop">
-      <h3>4 &middot; Mishawaka / South Bend, IN</h3>
-      <div class="meta">~385 MI &middot; ~6H &middot; CENTRAL FROM HERE</div>
-      <p>Mishawaka on McKinley Hwy, or South Bend on SR-933. Clock reads about <strong>6:00 PM Central</strong> &mdash; you gained the hour, so it feels earlier than the day has been. Custard stop if you already ate.</p>
-      <a target="_blank" href="https://maps.apple.com/?q=Culvers+Mishawaka+IN">Find it &rarr;</a>
-      <div class="chips"><span class="chip eat">Culver&rsquo;s</span><span class="chip">Custard</span></div>
-    </div>
-
-    <div class="stop">
-      <h3>5 &middot; Portage or Chesterton, IN</h3>
-      <div class="meta">~440 MI &middot; ~6H45 &middot; BEFORE THE GARY STRETCH &middot; CENTRAL</div>
-      <p>Last chance before the mills and the Illinois line. Both sit near the Dunes.</p>
-      <a target="_blank" href="https://maps.apple.com/?q=Culvers+Portage+IN">Find it &rarr;</a>
-      <div class="chips"><span class="chip eat">Culver&rsquo;s</span></div>
-    </div>
-
-    <div class="stop">
-      <h3>6 &middot; Batavia, IL &mdash; Randall Rd</h3>
-      <div class="meta">MINUTES FROM THE HOUSE &middot; CENTRAL</div>
-      <p>Closest to Packford Lane, and it&rsquo;s the same town as Fermilab. Naperville (Naper Blvd) and Warrenville (Rte 59) are also close. Tomorrow&rsquo;s problem, not tonight&rsquo;s.</p>
-      <a target="_blank" href="https://maps.apple.com/?q=Culvers+Randall+Rd+Batavia+IL">Find it &rarr;</a>
-      <div class="chips"><span class="chip eat">Culver&rsquo;s</span></div>
-    </div>
-  </div>
-
-  <div class="grp">
-    <h2>If You Only Stop Once</h2>
     <div class="card">
-      <p><strong>Sandusky.</strong> It is the least friction of any stop on the route &mdash; off the turnpike, eat, back on &mdash; and at roughly 3h50 it splits the drive close to evenly.</p>
-      <p>Strongsville is 35 minutes earlier if hunger wins, but it means coming off the turnpike into Cleveland suburbs.</p>
+      <h3>Pennsylvania is the thin part</h3>
+      <p>I-80 across PA has <strong>no mainline service plazas at all</strong>. Everything is an exit ramp, and
+      between about 2 and 5 AM a lot of those exits have nothing open. The reliable ones are the truck stops:
+      <strong>Brookville (exit 81)</strong>, <strong>DuBois (exit 101)</strong>,
+      <strong>Snow Shoe (exit 147)</strong>, <strong>Milton/Williamsport (exit 212)</strong>,
+      <strong>Bloomsburg (exit 232)</strong>. All 24 hours, all with real coffee and a bathroom you&rsquo;d use.</p>
+      <p>Snow Shoe to Milton is the emptiest 65 miles of the night. Fill up before it, not after.</p>
+    </div>
+    <div class="card">
+      <h3>Where to swap drivers</h3>
+      <p>The natural handoff is <strong>the Ohio&ndash;Pennsylvania line</strong>, about five and a half hours in.
+      Whoever takes PA gets the hard shift: four and three quarter hours, dark, hilly, and dull. Swap again at
+      <strong>DuBois or Snow Shoe</strong> if that&rsquo;s too much.</p>
+      <p>The last hour &mdash; the bridge, the Cross Bronx, the Throgs Neck &mdash; should be whoever is most awake,
+      not whoever&rsquo;s turn it is.</p>
     </div>
   </div>
 </section>
 
-<section class="panel" id="p-there" role="tabpanel" hidden>
+<section class="panel" id="p-info" role="tabpanel" hidden>
   <div class="grp">
-    <h2>Aurora</h2>
+    <h2>Addresses</h2>
     <div class="card">
       <dl class="dl">
-        <div><dt>Family</dt><dd><a target="_blank" href="https://maps.apple.com/?address=2806+Packford+Lane,+Aurora,+IL+60502">2806 Packford Lane, Aurora IL 60502</a></dd></div>
-        <div><dt>VRBO</dt><dd><a target="_blank" href="https://maps.apple.com/?address=598+Westfield+Crse,+Geneva,+IL+60134">598 Westfield Crse, Geneva IL 60134</a><br><span class="fine">Geneva, not Aurora &mdash; about 9 miles north of the house, 15 minutes.</span></dd></div>
-        <div><dt>Drive</dt><dd class="mono">~575 mi &middot; ~9h10 moving</dd></div>
-        <div><dt>Time zone</dt><dd>Central &mdash; one hour behind Pittsburgh</dd></div>
+        <div><dt>Leaving</dt><dd><a target="_blank" href="https://maps.apple.com/?address=598+Westfield+Crse,+Geneva,+IL+60134">598 Westfield Crse, Geneva IL 60134</a><span class="fine">The VRBO</span></dd></div>
+        <div><dt>Family</dt><dd><a target="_blank" href="https://maps.apple.com/?address=2806+Packford+Lane,+Aurora,+IL+60502">2806 Packford Lane, Aurora IL 60502</a><span class="fine">15 minutes south of the VRBO</span></dd></div>
+        <div><dt>Home</dt><dd>Port Washington NY</dd></div>
+        <div><dt>Drive</dt><dd class="mono">~875 mi &middot; ~13h25 moving</dd></div>
+        <div><dt>Clock</dt><dd>Lose an hour in Indiana. Central &rarr; Eastern.</dd></div>
       </dl>
     </div>
-    <div class="card">
-      <h3>Realistic arrival</h3>
-      <p>The card on the Drive tab counts down from wherever you actually are &mdash; miles left, time left, and your real pace once you&rsquo;ve been rolling twenty minutes. It moves as you do.</p>
-      <p>Two addresses, and they are not the same town. The <strong>house is in Aurora</strong>; the <strong>VRBO is in Geneva</strong>, about fifteen minutes north. Late arrival means the VRBO first. <strong>The baby is a tomorrow thing.</strong></p>
-    </div>
   </div>
   <div class="grp">
-    <h2>Still To Add</h2>
+    <h2>The Shape Of It</h2>
     <div class="card">
-      <ul>
-        <li>VRBO check-in time and door code</li>
-        <li>Anything you want near the house &mdash; coffee, a park for the boys, breakfast</li>
-        <li>What time you want to leave Monday, which drives the whole trip home</li>
-      </ul>
+      <p>Thirteen and a half hours moving, closer to <strong>fifteen and a half on the clock</strong> once you
+      count the lost hour and two real stops. Leave Geneva at 6 PM Central and you&rsquo;re on Long Island around
+      <strong>10:30 AM Eastern</strong>. Leave at 8 PM and it&rsquo;s half past noon.</p>
+      <p>The good news about going overnight: you cross Chicago, Cleveland, and the George Washington Bridge at
+      hours when none of them are a problem. That is the entire argument for driving through the night, and it
+      is a good one.</p>
     </div>
-  </div>
-</section>
-
-<section class="panel" id="p-back" role="tabpanel" hidden>
-  <div class="grp">
-    <h2>The Drive Home</h2>
     <div class="card">
-      <p><strong>Stage two &mdash; not built yet, by design.</strong> You said overnight, and an overnight run needs different things than this one: where to stop when everyone&rsquo;s asleep, which plazas are open at 2 AM, when to swap drivers, and what&rsquo;s open for coffee in the dead middle of Ohio.</p>
-      <p>Tell me when you&rsquo;re planning to pull out of Aurora and I&rsquo;ll build it around that. Aurora to Port Washington is roughly <strong>800 miles, 12 hours moving</strong> &mdash; a different animal from today.</p>
+      <h3>How this page knows where you are</h3>
+      <p>It uses your phone&rsquo;s location, and nothing else &mdash; no account, no sign-in, nothing shared. If
+      location is off or refused, tap the leg you&rsquo;re on and it keeps the countdown running off the clock
+      instead. Either way it works.</p>
     </div>
   </div>
 </section>
 
 </main>
 
-<footer>
-  RUSSELLTON PA &rarr; AURORA IL &rarr; PORT WASHINGTON NY
-</footer>
-
 <script>
 (function(){
+  /* ---------- tabs ---------- */
   var tabs=[].slice.call(document.querySelectorAll('.tab'));
-  function show(n,push){
-    var ok=false;
+  function show(id,scroll){
     tabs.forEach(function(t){
-      var on=t.dataset.p===n; if(on) ok=true;
+      var on=t.dataset.p===id;
       t.setAttribute('aria-selected',on?'true':'false');
       document.getElementById('p-'+t.dataset.p).hidden=!on;
     });
-    if(!ok) return show('drive',push);
-    if(push){ try{history.replaceState(null,'','#'+n)}catch(e){} }
-    window.scrollTo({top:0,behavior:'auto'});
+    if(location.hash.slice(1)!==id) history.replaceState(null,'','#'+id);
+    if(scroll) window.scrollTo(0,0);
   }
-  tabs.forEach(function(t){t.addEventListener('click',function(){show(t.dataset.p,true)})});
-  show((location.hash||'#drive').slice(1),false);
+  tabs.forEach(function(t){ t.addEventListener('click',function(){ show(t.dataset.p,true); }); });
+  var h=location.hash.slice(1);
+  if(h && document.getElementById('p-'+h)) show(h,false);
 
-  // text size, persisted
+  /* ---------- text size ---------- */
   var STEPS=[1.0,1.18,1.38,1.62,1.9], si=1;
-  try{var v=parseInt(localStorage.getItem('auroraTxt'),10); if(!isNaN(v)&&v>=0&&v<STEPS.length) si=v;}catch(e){}
+  try{var v=parseInt(localStorage.getItem('homeTxt'),10); if(!isNaN(v)&&v>=0&&v<STEPS.length) si=v;}catch(e){}
   function applySize(){
     document.documentElement.style.setProperty('--scale',STEPS[si]);
-    try{localStorage.setItem('auroraTxt',si)}catch(e){}
+    try{localStorage.setItem('homeTxt',si)}catch(e){}
   }
   applySize();
   document.getElementById('tup').addEventListener('click',function(){ if(si<STEPS.length-1){si++;applySize()} });
   document.getElementById('tdn').addEventListener('click',function(){ if(si>0){si--;applySize()} });
 
+  /* ---------- the drive, east ---------- */
+  var TOTAL=875, PLAN_MPH=65, STOPHRS=1.6;
 
-  /* ---------- where are we ---------- */
-  var ROUTE=[
-    {n:'Ford City',la:40.772,lo:-79.532},
-    {n:'Kittanning',la:40.816,lo:-79.522},
-    {n:'the Punxsutawney turnoff',la:41.161,lo:-79.083},
-    {n:'the old oil country',la:41.195,lo:-79.385},
-    {n:'the Emlenton bridge',la:41.183,lo:-79.712},
-    {n:'the Ohio line',la:41.222,lo:-80.519},
-    {n:'Youngstown',la:41.095,lo:-80.647},
-    {n:'Warren',la:41.237,lo:-80.818},
-    {n:'the Cuyahoga valley',la:41.238,lo:-81.345},
-    {n:'Sandusky and Lake Erie',la:41.372,lo:-82.607},
-    {n:'the Great Black Swamp',la:41.470,lo:-83.250},
-    {n:'Toledo',la:41.552,lo:-83.628},
-    {n:'the Indiana line',la:41.704,lo:-84.806},
-    {n:'Elkhart',la:41.683,lo:-85.916},
-    {n:'South Bend',la:41.679,lo:-86.226},
-    {n:'the Indiana Dunes',la:41.632,lo:-87.055},
-    {n:'Gary',la:41.601,lo:-87.340},
-    {n:'I-88',la:41.770,lo:-88.150},
-    {n:'Fermilab',la:41.800,lo:-88.215},
-    {n:'Aurora',la:41.790,lo:-88.245}
+  // n: what you're near.  m: road miles from Geneva.
+  var WP=[
+    {n:'Geneva',            m:0,   la:41.887, lo:-88.305},
+    {n:'I-88 at Aurora',    m:9,   la:41.800, lo:-88.270},
+    {n:'I-355 south',       m:20,  la:41.797, lo:-88.078},
+    {n:'I-80 at New Lenox', m:38,  la:41.545, lo:-88.020},
+    {n:'the Indiana line',  m:66,  la:41.570, lo:-87.530},
+    {n:'the Toll Road',     m:87,  la:41.590, lo:-87.180},
+    {n:'the time change',   m:100, la:41.640, lo:-86.930},
+    {n:'Michigan City',     m:106, la:41.680, lo:-86.870},
+    {n:'South Bend',        m:143, la:41.679, lo:-86.226},
+    {n:'Elkhart',           m:163, la:41.683, lo:-85.916},
+    {n:'Angola',            m:218, la:41.660, lo:-85.000},
+    {n:'the Ohio line',     m:231, la:41.704, lo:-84.806},
+    {n:'Toledo',            m:295, la:41.552, lo:-83.628},
+    {n:'the Black Swamp',   m:312, la:41.470, lo:-83.250},
+    {n:'Sandusky',          m:349, la:41.372, lo:-82.607},
+    {n:'Strongsville',      m:396, la:41.310, lo:-81.833},
+    {n:'Macedonia',         m:414, la:41.313, lo:-81.500},
+    {n:'Youngstown',        m:465, la:41.095, lo:-80.647},
+    {n:'the Pennsylvania line',m:472,la:41.222,lo:-80.519},
+    {n:'Barkeyville',       m:501, la:41.280, lo:-79.980},
+    {n:'the Emlenton bridge',m:514,la:41.183, lo:-79.712},
+    {n:'Clarion',           m:534, la:41.195, lo:-79.385},
+    {n:'Brookville',        m:553, la:41.161, lo:-79.083},
+    {n:'DuBois',            m:573, la:41.120, lo:-78.760},
+    {n:'Snow Shoe',         m:619, la:41.030, lo:-77.960},
+    {n:'Bellefonte',        m:633, la:40.940, lo:-77.720},
+    {n:'Lock Haven',        m:650, la:41.050, lo:-77.450},
+    {n:'Milton',            m:684, la:41.020, lo:-76.850},
+    {n:'Bloomsburg',        m:704, la:41.000, lo:-76.450},
+    {n:'Hazleton',          m:728, la:40.970, lo:-76.000},
+    {n:'Stroudsburg',       m:774, la:40.990, lo:-75.250},
+    {n:'the Water Gap',     m:782, la:40.970, lo:-75.130},
+    {n:'Netcong',           m:810, la:40.900, lo:-74.700},
+    {n:'Parsippany',        m:826, la:40.860, lo:-74.420},
+    {n:'Paterson',          m:840, la:40.900, lo:-74.160},
+    {n:'the bridge',        m:850, la:40.850, lo:-73.950},
+    {n:'the Throgs Neck',   m:864, la:40.810, lo:-73.790},
+    {n:'Port Washington',   m:875, la:40.826, lo:-73.698}
   ];
-  var DEST={la:41.790,lo:-88.245};
-  var VRBO_EXTRA=15;                 // minutes on from the house to the Geneva VRBO
-  // road miles still to drive at each waypoint, from turnpike mileposts
-  var REM=[553,548,507,488,468,427,419,395,372,303,266,249,186,120,100,59,49,13,7,0];
-  var TOTAL=575, PLAN_MPH=63, STOPHRS=1.0;
-  var LEGSTART=[0,68,148,389,525,568];
-  var LEGNAMES=['PA-28 north to I-80','I-80 west across Pennsylvania',
-    'Ohio Turnpike, end to end','Indiana Toll Road','Around Chicago to I-88','Packford Lane'];
-  var LEGSHORT=['PA-28','I-80 PA','Ohio','Indiana','Chicago','There'];
+
+  var LEGSTART=[0,38,106,231,472,782,850];
+  var LEGNAME=['Geneva to I-80','Around Chicago into Indiana','Indiana Toll Road','Ohio Turnpike',
+    'I-80 across Pennsylvania','New Jersey to the bridge','The bridge and home'];
+  var LEGSHORT=['ILL','CHI','IND','OHIO','PENN','NJ','NYC'];
+  var LEGS=[
+    ['Geneva to I-80','~38 MI &middot; ~45 MIN &middot; CENTRAL',
+     'Kirk Road down to I-88 east, then I-355 south to I-80. The reverse of how you came in, in the dark.'],
+    ['Around Chicago into Indiana','~68 MI &middot; ~1H15 &middot; CT &rarr; ET',
+     'I-80 east along the bottom of the city, past Gary and the mills. <strong>The hour comes back about forty miles into Indiana</strong>, near LaPorte &mdash; northwest Indiana keeps Chicago time, so the state line is not where the clock jumps.'],
+    ['Indiana Toll Road','~125 MI &middot; ~1H55 &middot; EASTERN',
+     'South Bend, Elkhart, Angola. Straight, flat, dull, and fast. Service plazas on the mainline the whole way.'],
+    ['Ohio Turnpike','~241 MI &middot; ~3H40 &middot; EASTERN',
+     'The longest single stretch and the easiest. Toledo, Sandusky, around the bottom of Cleveland, Youngstown. Plazas every 30&ndash;40 miles, open all night. <strong>Fill up before Youngstown</strong> &mdash; Pennsylvania has nothing on the mainline.'],
+    ['I-80 across Pennsylvania','~310 MI &middot; ~4H45 &middot; EASTERN',
+     'This is the night. No service plazas, no cities, real hills between Snow Shoe and Milton, and deer. Whoever drives this deserves the good seat afterward.'],
+    ['New Jersey to the bridge','~68 MI &middot; ~1H05 &middot; EASTERN',
+     'Out of the Water Gap and down through Netcong and Parsippany. It stops feeling like a road trip somewhere around Paterson.'],
+    ['The bridge and home','~27 MI &middot; ~40 MIN &middot; EASTERN',
+     'George Washington Bridge, Cross Bronx, Throgs Neck, and home. At 6 AM this is twenty minutes. At 9 AM it is an hour and a quarter. Worth pushing to beat.']
+  ];
+
+  // Culver's, verified against their own location list. Nothing east of Ohio.
+  var STOPS=[
+    ['St. Charles, IL',   14,  'Randall Road &middot; 15 min in',  'Last easy one before you commit. If anybody is going to want it, it is now.'],
+    ['Portage, IN',       92,  'Toll Road exit 31 &middot; ~1h30', 'Right off the Toll Road. Still Central time here.'],
+    ['Mishawaka, IN',     147, 'Toll Road exit 83 &middot; ~2h30', 'Just past South Bend, a couple of minutes off the road.'],
+    ['Perrysburg, OH',    297, 'Turnpike exit 64 &middot; ~4h45',  'Toledo. Dinner-shaped if you left in the afternoon.'],
+    ['Strongsville, OH',  396, 'Turnpike exit 152 &middot; ~6h15', 'Southwest edge of Cleveland.'],
+    ['Macedonia, OH',     414, 'Turnpike exit 173 &middot; ~6h30', 'THE LAST ONE. After this there is not another Culver’s between you and the house — 620 miles of it. Check the hours before you count on it this late.']
+  ];
 
   function miles(a,b,c,d){
     var R=3958.8,t=Math.PI/180;
@@ -735,171 +408,147 @@
     var x=Math.sin(dp/2)*Math.sin(dp/2)+Math.cos(a*t)*Math.cos(c*t)*Math.sin(dl/2)*Math.sin(dl/2);
     return 2*R*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
   }
-  function wpMile(i){ return TOTAL-REM[i]; }
   function pad(n){ return String(n).padStart(2,'0'); }
-  function hhmm(d){ return d.toLocaleTimeString('en-US',
-    {timeZone:'America/Chicago',hour:'numeric',minute:'2-digit'}); }
+  function clock(d){ return d.toLocaleTimeString('en-US',{timeZone:'America/New_York',hour:'numeric',minute:'2-digit'}); }
+  function day(d){ return d.toLocaleDateString('en-US',{timeZone:'America/New_York',weekday:'long'}); }
   function hm(h){ var t=Math.max(0,Math.round(h*60)); return Math.floor(t/60)+':'+pad(t%60); }
 
-  /* One number runs the whole app: how far along we are.
-     Set it by tapping a leg, or let GPS set it if you want GPS. Then it
-     keeps moving on the clock, so it stays right without touching anything. */
-  var anchor=null, gpsOn=false, gpsWatch=null;
-  try{ anchor=JSON.parse(localStorage.getItem('auroraAnchor')||'null'); }catch(e){}
-  if(anchor && (typeof anchor.mile!=='number' || typeof anchor.t!=='number')) anchor=null;
+  /* ---------- one number: miles travelled ---------- */
+  var pos=null, gpsState='idle', gpsWatch=null;   // idle | asking | on | failed
+  try{ pos=JSON.parse(localStorage.getItem('homePos')||'null'); }catch(e){}
+  if(pos && typeof pos.m!=='number') pos=null;
 
-  function setAnchor(mile,src){
-    anchor={mile:Math.max(0,Math.min(TOTAL,mile)),t:Date.now(),src:src};
-    try{ localStorage.setItem('auroraAnchor',JSON.stringify(anchor)); }catch(e){}
+  function setPos(m,src){
+    pos={m:Math.max(0,Math.min(TOTAL,m)),t:Date.now(),src:src};
+    try{ localStorage.setItem('homePos',JSON.stringify(pos)); }catch(e){}
     render();
   }
-  function curMile(){
-    if(!anchor) return null;
-    return Math.min(TOTAL, anchor.mile + (Date.now()-anchor.t)/3600000*PLAN_MPH);
+  function mileNow(){
+    if(!pos) return null;
+    if(pos.src==='gps' && gpsState==='on') return pos.m;
+    return Math.min(TOTAL, pos.m+(Date.now()-pos.t)/3600000*PLAN_MPH);
   }
-  function progOf(m){ var b=0; for(var i=0;i<ROUTE.length;i++) if(wpMile(i)<=m) b=i; return b; }
   function legOf(m){ var l=0; for(var i=0;i<LEGSTART.length;i++) if(m>=LEGSTART[i]) l=i; return l; }
+  function nearOf(m){ var b=0; for(var i=0;i<WP.length;i++) if(WP[i].m<=m) b=i; return b; }
 
-  /* ---------- optional GPS: never asked for, never required ---------- */
-  function gpsFix(pos){
-    gpsOn=true;
-    try{ localStorage.setItem('auroraGPS','1'); }catch(e){}
-    var la=pos.coords.latitude, lo=pos.coords.longitude;
-    var best=0,bd=1e9;
-    ROUTE.forEach(function(r,i){ var d=miles(la,lo,r.la,r.lo); if(d<bd){bd=d;best=i;} });
-    var left;
-    if(best>=ROUTE.length-1){ left=miles(la,lo,DEST.la,DEST.lo); }
+  /* ---------- location ---------- */
+  function onFix(p){
+    gpsState='on';
+    try{ localStorage.setItem('homeGPS','1'); }catch(e){}
+    var la=p.coords.latitude, lo=p.coords.longitude;
+    var best=0, bd=1e9;
+    WP.forEach(function(w,i){ var d=miles(la,lo,w.la,w.lo); if(d<bd){bd=d;best=i;} });
+    var m;
+    if(best>=WP.length-1) m=TOTAL-miles(la,lo,WP[WP.length-1].la,WP[WP.length-1].lo);
     else{
-      var seg=miles(ROUTE[best].la,ROUTE[best].lo,ROUTE[best+1].la,ROUTE[best+1].lo);
-      var toNext=miles(la,lo,ROUTE[best+1].la,ROUTE[best+1].lo);
-      var frac=seg>0?Math.min(1,toNext/seg):0;
-      left=REM[best+1]+(REM[best]-REM[best+1])*frac;
+      var seg=miles(WP[best].la,WP[best].lo,WP[best+1].la,WP[best+1].lo);
+      var toNext=miles(la,lo,WP[best+1].la,WP[best+1].lo);
+      var frac=seg>0?Math.max(0,Math.min(1,1-toNext/seg)):0;
+      m=WP[best].m+(WP[best+1].m-WP[best].m)*frac;
     }
-    setAnchor(TOTAL-left,'gps');
+    setPos(m,'gps');
   }
-  function gpsFail(){ gpsOn=false; render(); }
+  function onFail(){ gpsState='failed'; render(); }
   function startGPS(){
-    if(!navigator.geolocation){ gpsFail(); return; }
+    if(!navigator.geolocation){ onFail(); return; }
+    gpsState='asking'; render();
     if(gpsWatch!==null) navigator.geolocation.clearWatch(gpsWatch);
-    gpsWatch=navigator.geolocation.watchPosition(gpsFix,gpsFail,
-      {enableHighAccuracy:true,maximumAge:15000,timeout:20000});
+    gpsWatch=navigator.geolocation.watchPosition(onFix,onFail,
+      {enableHighAccuracy:true,maximumAge:15000,timeout:25000});
   }
 
-  /* ---------- the one control, on both tabs ---------- */
-  function controlHTML(){
-    var m=curMile(), set=m!==null;
-    var leg=set?legOf(m):-1, left=set?Math.round(TOTAL-m):null;
-    var picks='';
-    for(var i=0;i<6;i++)
-      picks+='<button class="pk'+(i===leg?' on':'')+'" data-leg="'+i+'">'+
-        '<b>'+(i+1)+'</b><span>'+LEGSHORT[i]+'</span></button>';
-    var bars='';
-    for(var j=0;j<6;j++) bars+='<i class="'+(j<leg?'done':(j===leg?'on':''))+'"></i>';
-    var hrs=set?(left/PLAN_MPH+STOPHRS*(left/TOTAL)):null;
-    return '<div class="lnav">'+
-      '<div class="k">'+(set?'Leg '+(leg+1)+' of 6':'Where are you?')+'</div>'+
-      '<div class="big">'+(set?LEGNAMES[leg]:'Tap the leg you&rsquo;re on')+'</div>'+
-      (set?'<div class="sub">'+left+' miles left &middot; house by '+
-        hhmm(new Date(Date.now()+hrs*3600*1000))+' CT</div>':
-        '<div class="sub">One tap and the whole app follows the drive.</div>')+
-      '<div class="picks">'+picks+'</div>'+
-      (set?'<div class="bars">'+bars+'</div>':'')+
-      '<div class="foot">'+
-        (gpsOn?'Following your GPS.'
-             :(set?'Moving on the clock. Tap again whenever it drifts.'
-                  :'No permissions, no sign-in. Just tap.'))+
-        (gpsOn?'':' <button class="lnk" id="usegps">Use GPS too</button>')+
-      '</div></div>';
-  }
-
-  function wireControl(root){
-    root.querySelectorAll('.pk').forEach(function(b){
-      b.addEventListener('click',function(){ setAnchor(LEGSTART[+b.dataset.leg],'tap'); });
-    });
-    var g=root.querySelector('#usegps');
-    if(g) g.addEventListener('click',startGPS);
-  }
-
-  /* ---------- paint everything from that one number ---------- */
+  /* ---------- paint ---------- */
   function render(){
-    var m=curMile(), set=m!==null;
-    var leg=set?legOf(m):-1, prog=set?progOf(m):-1;
-    var left=set?Math.round(TOTAL-m):TOTAL;
+    var m=mileNow(), set=m!==null;
+    var left=set?Math.max(0,TOTAL-m):TOTAL;
     var hrs=left/PLAN_MPH+STOPHRS*(left/TOTAL);
+    var leg=set?legOf(m):-1;
+    var arr=new Date(Date.now()+hrs*3600*1000);
+    var hero=document.getElementById('hero');
 
-    ['legnav','gps'].forEach(function(id){
-      var el=document.getElementById(id);
-      if(!el) return;
-      el.innerHTML=controlHTML();
-      wireControl(el);
+    if(!set){
+      hero.innerHTML='<div class="hero">'+
+        '<div class="k">Not started</div>'+
+        '<div class="clock">13:25</div><div class="unit">hours of driving</div>'+
+        '<p class="arrive">875 miles, Geneva to Port Washington.<small>Start it and this becomes a countdown.</small></p>'+
+        '<button class="start" id="go">'+(gpsState==='asking'?'Finding you…':'Start the drive')+'</button>'+
+        (gpsState==='failed'
+          ? '<p class="src">Couldn’t get a location. <button id="retry">Try again</button> — or tap the piece you’re on and it runs off the clock instead.</p>'+picks(-1)
+          : '<p class="src">Uses your phone’s location. Nothing to sign into.</p>')+
+        '</div>';
+    } else {
+      var bars='';
+      for(var i=0;i<7;i++) bars+='<i class="'+(i<leg?'done':(i===leg?'on':''))+'"></i>';
+      hero.innerHTML='<div class="hero">'+
+        '<div class="k">'+(left<2?'You’re home':'Time left')+'</div>'+
+        '<div class="clock">'+hm(hrs)+'</div><div class="unit">'+(hrs<1?'minutes':'hours')+' to go</div>'+
+        '<p class="arrive">Home by '+clock(arr)+' '+day(arr)+
+          '<small>'+Math.round(left)+' miles &middot; leg '+(leg+1)+' of 7</small></p>'+
+        '<div class="bars">'+bars+'</div>'+
+        '<div class="where">Near <b>'+WP[nearOf(m)].n+'</b> &mdash; '+LEGNAME[leg]+'</div>'+
+        '<p class="src">'+(gpsState==='on'
+          ? 'Following your location.'
+          : 'Running on the clock. <button id="go2">Use location</button> for the real thing, or tap where you are:')+'</p>'+
+        (gpsState==='on'?'':picks(leg))+
+      '</div>';
+    }
+
+    var g=document.getElementById('go'); if(g) g.addEventListener('click',startGPS);
+    var g2=document.getElementById('go2'); if(g2) g2.addEventListener('click',startGPS);
+    var r=document.getElementById('retry'); if(r) r.addEventListener('click',startGPS);
+    hero.querySelectorAll('.pk').forEach(function(b){
+      b.addEventListener('click',function(){ setPos(LEGSTART[+b.dataset.leg],'tap'); });
     });
 
-    document.querySelectorAll('#p-drive .leg').forEach(function(el,i){
-      el.classList.toggle('done', leg>=0 && i<leg);
-      el.classList.toggle('here', i===leg);
-      var num=el.querySelector('.num'), h=el.querySelector('h3');
-      if(num){
-        var car=num.querySelector('.car');
-        if(i===leg && !car) num.insertAdjacentHTML('afterbegin','<span class="car" aria-hidden="true">&rsaquo;</span>');
-        if(i!==leg && car) car.remove();
-      }
-      var tag=el.querySelector('.legnow');
-      if(i===leg && !tag && h) h.insertAdjacentHTML('beforeend','<span class="legnow">You&rsquo;re here</span>');
-      if(i!==leg && tag) tag.remove();
-    });
-
-    var mile$=document.querySelectorAll('#p-passing .mile');
-    mile$.forEach(function(el,i){
-      el.classList.toggle('passed', prog>=0 && i<prog);
-      el.classList.toggle('here', i===prog);
-      var h=el.querySelector('h3'), tag=el.querySelector('.nowtag');
-      if(i===prog && !tag && h) h.insertAdjacentHTML('beforeend','<span class="nowtag">Here</span>');
-      if(i!==prog && tag) tag.remove();
-    });
-
-    document.querySelectorAll('#p-stops .stop').forEach(function(el,i){
-      el.classList.toggle('passed', set && stopMile(i) < m-5);
-    });
+    document.getElementById('tiles').innerHTML=
+      '<div class="tile"><div class="n">'+Math.round(left)+'</div><div class="l">miles left</div></div>'+
+      '<div class="tile"><div class="n">'+(set?Math.round(m):0)+'</div><div class="l">miles done</div></div>'+
+      '<div class="tile"><div class="n">'+(set?Math.round(100*m/TOTAL):0)+'%</div><div class="l">of the way</div></div>';
 
     var hdr=document.getElementById('hdr');
-    if(hdr) hdr.innerHTML = set ? left+' MI LEFT &middot; '+hm(hrs) : '~575 MI &middot; ~9H10';
+    if(hdr) hdr.innerHTML = set ? Math.round(left)+' MI &middot; '+hm(hrs) : '~875 MI';
 
-    var ct=new Date(Date.now()+hrs*3600*1000);
-    var vr=new Date(ct.getTime()+VRBO_EXTRA*60000);
-    var eta=document.getElementById('eta');
-    if(eta){
-      eta.innerHTML='<div class="eta">'+
-        '<div class="k">'+(set?(gpsOn?'Live &middot; GPS':'Live &middot; from leg '+(leg+1)):'If you left right now')+'</div>'+
-        '<h2>The house by '+hhmm(ct)+' CT</h2>'+
-        '<p class="eta-sub">VRBO in Geneva about '+hhmm(vr)+'</p>'+
-        '<div class="eta-grid">'+
-          '<div class="eta-cell"><div class="n">'+left+'</div><div class="l">miles left</div></div>'+
-          '<div class="eta-cell"><div class="n">'+hm(hrs)+'</div><div class="l">to go</div></div>'+
-          '<div class="eta-cell"><div class="n">'+PLAN_MPH+'</div><div class="l">mph</div></div>'+
-        '</div>'+
-        '<div class="go-row">'+
-          '<a href="https://maps.apple.com/?daddr=2806+Packford+Lane,+Aurora,+IL+60502&dirflg=d" target="_blank">The house &rarr;</a>'+
-          '<a href="https://maps.apple.com/?daddr=598+Westfield+Crse,+Geneva,+IL+60134&dirflg=d" target="_blank">The VRBO &rarr;</a>'+
-          '<a class="ghost" href="#passing" data-jump="passing">Passing &rarr;</a>'+
-        '</div>'+
-        '<p class="eta-note">'+(set
-          ? 'Counts down on its own. If it drifts, tap the leg you&rsquo;re actually on.'
-          : 'Tap your leg above and this becomes a live countdown.')+'</p>'+
-      '</div>';
-      var j=eta.querySelector('[data-jump]');
-      if(j) j.addEventListener('click',function(e){e.preventDefault();show(j.dataset.jump,true)});
-    }
+    document.querySelectorAll('#legs .leg').forEach(function(el,i){
+      el.classList.toggle('done', leg>=0 && i<leg);
+      el.classList.toggle('here', i===leg);
+      var num=el.querySelector('.num'), hh=el.querySelector('h3');
+      var car=num.querySelector('.car');
+      if(i===leg && !car) num.insertAdjacentHTML('afterbegin','<span class="car" aria-hidden="true">›</span>');
+      if(i!==leg && car) car.remove();
+      var tag=el.querySelector('.legnow');
+      if(i===leg && !tag) hh.insertAdjacentHTML('beforeend','<span class="legnow">You’re here</span>');
+      if(i!==leg && tag) tag.remove();
+    });
+    document.querySelectorAll('#stops .stop').forEach(function(el,i){
+      el.classList.toggle('done', set && STOPS[i][1] < m-6);
+    });
   }
 
-  // rough mile marker for each Culver's, for greying out the ones behind us
-  var STOPMILE=[203,272,326,475,516,568];
-  function stopMile(i){ return STOPMILE[i]!==undefined?STOPMILE[i]:1e9; }
+  function picks(leg){
+    var s='<div class="picks">';
+    for(var i=0;i<7;i++)
+      s+='<button class="pk'+(i===leg?' on':'')+'" data-leg="'+i+'"><b>'+(i+1)+'</b><span>'+LEGSHORT[i]+'</span></button>';
+    return s+'</div>';
+  }
+
+  /* ---------- static lists ---------- */
+  document.getElementById('legs').innerHTML=LEGS.map(function(l,i){
+    return '<div class="leg"><span class="num">'+(i+1)+'</span><div class="body">'+
+      '<h3>'+l[0]+'</h3><div class="meta">'+l[1]+'</div><p>'+l[2]+'</p></div></div>';
+  }).join('');
+
+  document.getElementById('stops').innerHTML=STOPS.map(function(s,i){
+    var last=i===STOPS.length-1;
+    return '<div class="stop'+(last?' last':'')+'"><h3>'+s[0]+'</h3>'+
+      '<div class="meta">'+s[2]+'</div><p>'+s[3]+'</p>'+
+      '<a target="_blank" href="https://maps.apple.com/?q='+
+        encodeURIComponent("Culver's "+s[0])+'">Find it &rarr;</a></div>';
+  }).join('');
 
   render();
-  setInterval(render,30000);
-  try{ if(localStorage.getItem('auroraGPS')==='1') startGPS(); }catch(e){}
+  setInterval(render,20000);
+  try{ if(localStorage.getItem('homeGPS')==='1') startGPS(); }catch(e){}
 })();
 </script>
-
 </body>
 </html>

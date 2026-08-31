@@ -1,10 +1,11 @@
 # Aurora Run
 
-Drive app for Russellton PA → Aurora IL and back to Port Washington NY.
+One page, no build step, no sign-in.
 
-Single self-contained page. Public so it opens on any phone with no account
-and no sign-in. Stage one covers the outbound drive; the overnight return is
-stage two.
+**Live:** https://raw.githack.com/unwashedlugosi/aurora-run/main/index.html
 
-Served at:
-https://raw.githack.com/unwashedlugosi/aurora-run/main/index.html
+Currently pointed at the drive home: Geneva IL to Port Washington NY, ~875 miles.
+The whole app runs off one number — road miles travelled — set by GPS, or by
+tapping a leg if location is off. Everything else derives from it.
+
+`index.html` is the app. Icons and `manifest.json` make it installable to a home screen.
