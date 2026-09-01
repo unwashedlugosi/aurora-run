@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#12233A">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Aurora Run">
+<meta name="apple-mobile-web-app-title" content="Drive Home">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
@@ -13,7 +13,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="icon" type="image/png" sizes="32x32" href="icon-32.png">
 <link rel="manifest" href="manifest.json">
-<title>Aurora Run</title>
+<title>The Drive Home</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;600&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
@@ -203,6 +203,10 @@
   .wxr .rn.dry{color:var(--faint)}
   .dep{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.7rem;
     background:var(--surface);border:1px solid var(--rule);border-radius:9px;padding:.6rem .75rem}
+  .dep.dark{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);margin:.8rem 0 0}
+  .dep.dark label{color:var(--chrome-dim)}
+  .dep.dark input{background:rgba(0,0,0,.25);border-color:rgba(255,255,255,.25);color:var(--chrome-ink);
+    color-scheme:dark}
   .dep label{font-family:var(--f-d);font-size:.85rem;letter-spacing:.05em;text-transform:uppercase;color:var(--faint)}
   .dep input,.dep select{font:inherit;font-size:.95rem;padding:.3rem .4rem;border:1px solid var(--rule);
     border-radius:6px;background:var(--surface);color:var(--ink)}
@@ -241,8 +245,8 @@
     <button class="tab" role="tab" data-p="now" aria-selected="true">How Long</button>
     <button class="tab" role="tab" data-p="route" aria-selected="false">Route</button>
     <button class="tab" role="tab" data-p="wx" aria-selected="false">Weather</button>
-    <button class="tab" role="tab" data-p="here" aria-selected="false">Here</button>
     <button class="tab" role="tab" data-p="stops" aria-selected="false">Stops</button>
+    <button class="tab" role="tab" data-p="here" aria-selected="false">Geneva</button>
     <button class="tab" role="tab" data-p="info" aria-selected="false">Info</button>
   </nav>
 </header>
@@ -494,7 +498,7 @@
   function setPos(m,src){
     pos={m:Math.max(0,Math.min(TOTAL,m)),t:Date.now(),src:src};
     try{ localStorage.setItem('homePos',JSON.stringify(pos)); }catch(e){}
-    render();
+    render(true);
   }
   function mileNow(){
     if(!pos) return null;
@@ -531,7 +535,11 @@
   }
 
   /* ---------- paint ---------- */
-  function render(){
+  function render(force){
+    // the 20-second repaint must not yank a date field out from under a thumb,
+    // but an explicit change has to redraw
+    var ae=document.activeElement;
+    if(!force && ae && (ae.id==='hdep'||ae.id==='dep')) return;
     var m=mileNow(), set=m!==null;
     var left=set?Math.max(0,TOTAL-m):TOTAL;
     var hrs=left/PLAN_MPH+STOPHRS*(left/TOTAL);
@@ -540,14 +548,19 @@
     var hero=document.getElementById('hero');
 
     if(!set){
+      if(!depart) depart=defaultDepart();
+      var out=new Date(centralToDate(depart).getTime()+(TOTAL/PLAN_MPH+STOPHRS)*3600*1000);
       hero.innerHTML='<div class="hero">'+
-        '<div class="k">Not started</div>'+
-        '<div class="clock">13:25</div><div class="unit">hours of driving</div>'+
-        '<p class="arrive">875 miles, Geneva to Port Washington.<small>Start it and this becomes a countdown.</small></p>'+
+        '<div class="k">Not rolling yet</div>'+
+        '<div class="clock">'+hm(TOTAL/PLAN_MPH+STOPHRS)+'</div><div class="unit">hours, Geneva to home</div>'+
+        '<p class="arrive">Home by '+clock(out)+' '+day(out)+
+          '<small>875 miles &middot; leave at the time below and that is when you pull in</small></p>'+
+        '<div class="dep dark"><label for="hdep">Pulling out of Geneva &middot; Central</label>'+
+          '<input type="datetime-local" id="hdep" value="'+depart+'"></div>'+
         '<button class="start" id="go">'+(gpsState==='asking'?'Finding you…':'Start the drive')+'</button>'+
         (gpsState==='failed'
           ? '<p class="src">Couldn’t get a location. <button id="retry">Try again</button> — or tap the piece you’re on and it runs off the clock instead.</p>'+picks(-1)
-          : '<p class="src">Uses your phone’s location. Nothing to sign into.</p>')+
+          : '<p class="src">Tap that when you actually pull out. Uses your phone’s location, nothing to sign into.</p>')+
         '</div>';
     } else {
       var bars='';
@@ -566,6 +579,11 @@
       '</div>';
     }
 
+    var hd=document.getElementById('hdep');
+    if(hd) hd.addEventListener('change',function(){
+      depart=hd.value; try{localStorage.setItem('homeDepart',depart)}catch(e){}
+      hd.blur(); render(true); if(wxData) paintWx();
+    });
     var g=document.getElementById('go'); if(g) g.addEventListener('click',startGPS);
     var g2=document.getElementById('go2'); if(g2) g2.addEventListener('click',startGPS);
     var r=document.getElementById('retry'); if(r) r.addEventListener('click',startGPS);
@@ -790,7 +808,8 @@
       '<input type="datetime-local" id="dep" value="'+(depart||defaultDepart())+'"></div>';
     var di=document.getElementById('dep');
     if(di) di.addEventListener('change',function(){
-      depart=di.value; try{localStorage.setItem('homeDepart',depart)}catch(e){} paintWx();
+      depart=di.value; try{localStorage.setItem('homeDepart',depart)}catch(e){}
+      di.blur(); paintWx(); render(true);
     });
 
     route.innerHTML='<div class="wxr">'+WX.map(function(w,i){
@@ -826,7 +845,7 @@
   }
 
   render();
-  setInterval(render,20000);
+  setInterval(function(){ render(); },20000);
   try{ if(localStorage.getItem('homeGPS')==='1') startGPS(); }catch(e){}
   paintWx(); loadWx();
   setInterval(loadWx,15*60*1000);

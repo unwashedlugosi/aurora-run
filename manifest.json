@@ -1,14 +1,27 @@
 {
-  "name": "Aurora Run",
-  "short_name": "Aurora Run",
-  "description": "Pittsburgh to Aurora and back — the drive, what you're passing, and where to stop.",
+  "name": "The Drive Home",
+  "short_name": "Drive Home",
+  "description": "Geneva IL to Port Washington NY \u2014 how much longer, the route, and the weather where you will be.",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#12233A",
   "theme_color": "#12233A",
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icon.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "icon.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }
