@@ -161,7 +161,16 @@
   .stop .meta{font-family:var(--f-m);font-size:.8rem;color:var(--faint);margin-bottom:.35rem}
   .stop p{margin:0 0 .5rem;font-size:1rem;color:var(--muted)}
   .stop p:last-child{margin-bottom:0}
-  .stop a{font-family:var(--f-m);font-size:.82rem;font-weight:600;text-decoration:none}
+  .stop .addr{font-family:var(--f-m);font-size:.88rem;line-height:1.4;color:var(--ink);
+    background:var(--surface-alt);border-radius:6px;padding:.4rem .55rem;margin-bottom:.5rem;
+    -webkit-user-select:all;user-select:all}
+  .stop .acts{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+  .stop .acts a{flex:1 1 auto;text-align:center;background:var(--road);color:#fff;white-space:nowrap;
+    text-decoration:none;font-family:var(--f-d);font-weight:700;font-size:.95rem;letter-spacing:.03em;
+    text-transform:uppercase;border-radius:8px;padding:.5rem .5rem}
+  .stop .acts a.tel{flex:0 0 auto;background:none;color:var(--road);border:1px solid var(--rule);
+    font-family:var(--f-m);font-size:.82rem;font-weight:600;text-transform:none;letter-spacing:-.02em;
+    padding:.5rem .55rem}
 
   .alert{background:var(--clay-bg);border-left:4px solid var(--clay);border-radius:8px;
     padding:.75rem .9rem;font-size:.96rem;color:var(--ink)}
@@ -469,13 +478,33 @@
   ];
 
   // Culver's, verified against their own location list. Nothing east of Ohio.
+  // Addresses, phones and coordinates pulled from Culver's own location pages.
+  // mile = where it sits on this route; off = miles off the highway.
   var STOPS=[
-    ['St. Charles, IL',   14,  'Randall Road &middot; 15 min in',  'Last easy one before you commit. If anybody is going to want it, it is now.'],
-    ['Portage, IN',       92,  'Toll Road exit 31 &middot; ~1h30', 'Right off the Toll Road. Still Central time here.'],
-    ['Mishawaka, IN',     147, 'Toll Road exit 83 &middot; ~2h30', 'Just past South Bend, a couple of minutes off the road.'],
-    ['Perrysburg, OH',    297, 'Turnpike exit 64 &middot; ~4h45',  'Toledo. Dinner-shaped if you left in the afternoon.'],
-    ['Strongsville, OH',  396, 'Turnpike exit 152 &middot; ~6h15', 'Southwest edge of Cleveland.'],
-    ['Macedonia, OH',     414, 'Turnpike exit 173 &middot; ~6h30', 'THE LAST ONE. After this there is not another Culver’s between you and the house — 620 miles of it. Check the hours before you count on it this late.']
+    {city:'Batavia', st:'IL', street:'470 N Randall Rd', zip:'60510', tel:'(630) 425-3933',
+     mile:2, off:2.3, hrs:'as you leave',
+     note:'Randall Road on your way down to I-88. The only one that is still a choice rather than a detour.'},
+    {city:'Portage', st:'IN', street:'1515 Olmstead Dr', zip:'46368', tel:'(219) 706-9935',
+     mile:88, off:1.0, hrs:'1h30 in',
+     note:'A mile off the road right where I-80 hands you to the Toll Road. Still Central time here.'},
+    {city:'Mishawaka', st:'IN', street:'12561 McKinley Hwy', zip:'46545', tel:'(574) 931-2444',
+     mile:150, off:0.3, hrs:'2h35 in',
+     note:'Past South Bend and barely off the highway &mdash; three tenths of a mile. The easiest stop of the whole drive.'},
+    {city:'Angola', st:'IN', street:'2207 N Wayne St', zip:'46703', tel:'(260) 243-4359',
+     mile:218, off:0.1, hrs:'3h45 in',
+     note:'Last one in Indiana, sitting on top of the Toll Road exit. Good dinner slot if you left in the afternoon.'},
+    {city:'Perrysburg', st:'OH', street:'10380 Fremont Pike', zip:'43551', tel:'(419) 931-0291',
+     mile:297, off:0.1, hrs:'5h05 in',
+     note:'Toledo. Also right at the exit. If dinner has not happened by now, this is where it happens.'},
+    {city:'Sandusky', st:'OH', street:'4637 Milan Rd', zip:'44870', tel:'(419) 502-2600',
+     mile:345, off:2.1, hrs:'5h55 in',
+     note:'Two miles off the turnpike. Getting late for a full stop, but the coffee is real.'},
+    {city:'Strongsville', st:'OH', street:'8464 Pearl Rd', zip:'44136', tel:'(440) 297-4008',
+     mile:397, off:2.5, hrs:'6h50 in',
+     note:'Southwest edge of Cleveland. Almost certainly closed by the time you reach it &mdash; call first.'},
+    {city:'Macedonia', st:'OH', street:'8143 Golden Link Blvd', zip:'44067', tel:'(330) 468-0511',
+     mile:413, off:0.1, hrs:'7h05 in',
+     note:'THE LAST ONE. Nothing after this in Pennsylvania, New Jersey or New York &mdash; 460 miles of nothing. Almost certainly shut at this hour; the number is there so you can find out before you get your hopes up.'}
   ];
 
   function miles(a,b,c,d){
@@ -611,7 +640,7 @@
       if(i!==leg && tag) tag.remove();
     });
     document.querySelectorAll('#stops .stop').forEach(function(el,i){
-      el.classList.toggle('done', set && STOPS[i][1] < m-6);
+      el.classList.toggle('done', set && STOPS[i].mile < m-6);
     });
 
     // keep the forecast times honest as the position moves, but never
@@ -634,10 +663,18 @@
 
   document.getElementById('stops').innerHTML=STOPS.map(function(s,i){
     var last=i===STOPS.length-1;
-    return '<div class="stop'+(last?' last':'')+'"><h3>'+s[0]+'</h3>'+
-      '<div class="meta">'+s[2]+'</div><p>'+s[3]+'</p>'+
-      '<a target="_blank" href="https://maps.apple.com/?q='+
-        encodeURIComponent("Culver's "+s[0])+'">Find it &rarr;</a></div>';
+    var full="Culver's, "+s.street+', '+s.city+', '+s.st+' '+s.zip;
+    // daddr with the exact street address, so Maps routes to this building,
+    // not to whatever Culver's it feels like finding
+    var nav='https://maps.apple.com/?daddr='+encodeURIComponent(full)+'&dirflg=d';
+    return '<div class="stop'+(last?' last':'')+'">'+
+      '<h3>Culver&rsquo;s &mdash; '+s.city+', '+s.st+'</h3>'+
+      '<div class="meta">MILE '+s.mile+' &middot; '+s.hrs+' &middot; '+
+        (s.off<0.5?'right at the exit':s.off+' mi off')+'</div>'+
+      '<div class="addr">'+s.street+'<br>'+s.city+', '+s.st+' '+s.zip+'</div>'+
+      '<p>'+s.note+'</p>'+
+      '<div class="acts"><a href="'+nav+'" target="_blank">Add stop &rarr;</a>'+
+      '<a class="tel" href="tel:'+s.tel.replace(/[^0-9]/g,'')+'">'+s.tel+'</a></div></div>';
   }).join('');
 
   /* ---------- around the house ---------- */
